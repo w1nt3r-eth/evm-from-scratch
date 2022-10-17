@@ -1,0 +1,14 @@
+{
+  "name": "evm-from-scratch-scripts",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "printWidth": 120
+  },
+  "dependencies": {
+    "yaml": "^2.1.3"
+  }
+}

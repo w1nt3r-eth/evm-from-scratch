@@ -1,0 +1,98 @@
+[
+  {
+    "name": "STOP",
+    "hint": "",
+    "code": {
+      "asm": "STOP",
+      "bin": "00"
+    },
+    "expect": {
+      "success": true,
+      "stack": []
+    }
+  },
+  {
+    "name": "PUSH0",
+    "hint": "Read \"Program Counter\" section of the course learning materials for an example on how to parse the bytecode",
+    "code": {
+      "asm": "PUSH0",
+      "bin": "5f"
+    },
+    "expect": {
+      "stack": [
+        "0x0"
+      ],
+      "success": true
+    }
+  },
+  {
+    "name": "PUSH1",
+    "hint": "Read \"Program Counter\" section of the course learning materials for an example on how to parse the bytecode",
+    "code": {
+      "asm": "PUSH1 1",
+      "bin": "6001"
+    },
+    "expect": {
+      "stack": [
+        "0x1"
+      ],
+      "success": true
+    }
+  },
+  {
+    "name": "PUSH2",
+    "hint": "PUSH2 reads the next 2 bytes, don't forget to properly increment PC",
+    "code": {
+      "asm": "PUSH2 0x1122",
+      "bin": "611122"
+    },
+    "expect": {
+      "stack": [
+        "0x1122"
+      ],
+      "success": true
+    }
+  },
+  {
+    "name": "POP",
+    "hint": "POP removes the top item from the stack and discards it",
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 2\nPOP",
+      "bin": "6001600250"
+    },
+    "expect": {
+      "stack": [
+        "0x1"
+      ],
+      "success": true
+    }
+  },
+  {
+    "name": "ADD",
+    "hint": "ADD takes the first 2 items from the stack, adds them together and pushes the result",
+    "code": {
+      "asm": "PUSH1 0x01\nPUSH1 0x02\nADD",
+      "bin": "6001600201"
+    },
+    "expect": {
+      "stack": [
+        "0x3"
+      ],
+      "success": true
+    }
+  },
+  {
+    "name": "MUL",
+    "code": {
+      "asm": "PUSH1 0x02\nPUSH1 0x03\nMUL",
+      "bin": "6002600302"
+    },
+    "expect": {
+      "stack": [
+        "0x6"
+      ],
+      "success": true
+    },
+    "hint": ""
+  }
+]

@@ -1,0 +1,980 @@
+STOP:
+  code:
+    - STOP
+  expect:
+    success: true
+    stack: []
+
+PUSH:
+  code:
+    - PUSH1 1
+  expect:
+    stack: [1n]
+
+PUSH (twice):
+  code:
+    - PUSH1 1
+    - PUSH1 2
+  expect:
+    # note the order of items in `expect`: your implementation might keep
+    # the items in a reversed order (e.g. in JavaScript `push` appends items
+    # to the end of the array)
+    stack: [2n, 1n]
+
+POP:
+  code:
+    - PUSH1 1
+    - PUSH1 2
+    - POP
+  expect:
+    stack: [1n]
+
+STOP (midway):
+  code:
+    - PUSH1 1
+    - STOP
+    - PUSH1 2
+  expect:
+    stack: [1n]
+
+ADD:
+  code:
+    - PUSH1 0x01
+    - PUSH1 0x02
+    - ADD
+  expect:
+    stack: [3n]
+
+ADD (overflow):
+  code:
+    - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - PUSH1 0x02
+    - ADD
+  expect:
+    stack: [1n]
+
+MUL:
+  code:
+    - PUSH1 0x02
+    - PUSH1 0x03
+    - MUL
+  expect:
+    stack: [6n]
+
+MUL (overflow):
+  code:
+    - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - PUSH1 0x02
+    - MUL
+  expect:
+    stack: [0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffen]
+
+SUB:
+  code:
+    - PUSH1 0x02
+    - PUSH1 0x03
+    - SUB
+  expect:
+    stack: [1n]
+
+SUB (underflow):
+  code:
+    - PUSH1 0x03
+    - PUSH1 0x02
+    - SUB
+  expect:
+    stack: [0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn]
+
+DIV:
+  code:
+    - PUSH1 0x02
+    - PUSH1 0x06
+    - DIV
+  expect:
+    stack: [3n]
+
+DIV (whole):
+  code:
+    - PUSH1 0x06
+    - PUSH1 0x02
+    - DIV
+  expect:
+    stack: [0n]
+
+DIV (by zero):
+  code:
+    - PUSH1 0x00
+    - PUSH1 0x02
+    - DIV
+  expect:
+    stack: [0n]
+
+SDIV:
+  code:
+    - PUSH1 10
+    - PUSH1 10
+    - SDIV
+  expect:
+    stack: [1n]
+
+SDIV (negative):
+  code:
+    - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff # -1
+    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
+    - SDIV
+  expect:
+    stack: [2n]
+
+SDIV (mix of negative and positive):
+  code:
+    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
+    - PUSH1 10
+    - SDIV
+  expect:
+    stack: [0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbn] # -5
+
+MOD:
+  code:
+    - PUSH1 3
+    - PUSH1 10
+    - MOD
+  expect:
+    stack: [1n]
+
+MOD (by larger number):
+  code:
+    - PUSH1 17
+    - PUSH1 5
+    - MOD
+  expect:
+    stack: [5n]
+
+MOD (by zero):
+  code:
+    - PUSH1 0
+    - PUSH1 2
+    - MOD
+  expect:
+    stack: [0n]
+
+SMOD:
+  code:
+    - PUSH1 3
+    - PUSH1 10
+    - SMOD
+  expect:
+    stack: [1n]
+
+SMOD (negative):
+  code:
+    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd # -3
+    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8 # -10
+    - SMOD
+  expect:
+    stack: [0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffen] # -1
+
+SMOD (by zero):
+  code:
+    - PUSH1 0x00
+    - PUSH1 0x02
+    - SMOD
+  expect:
+    stack: [0n]
+
+LT:
+  code:
+    - PUSH1 10
+    - PUSH1 9
+    - LT
+  expect:
+    stack: [1n]
+
+LT (equal):
+  code:
+    - PUSH1 10
+    - PUSH1 10
+    - LT
+  expect:
+    stack: [0n]
+
+LT (greater):
+  code:
+    - PUSH1 10
+    - PUSH1 11
+    - LT
+  expect:
+    stack: [0n]
+
+GT:
+  code:
+    - PUSH1 9
+    - PUSH1 10
+    - GT
+  expect:
+    stack: [1n]
+
+GT (equal):
+  code:
+    - PUSH1 10
+    - PUSH1 10
+    - GT
+  expect:
+    stack: [0n]
+
+GT (less):
+  code:
+    - PUSH1 11
+    - PUSH1 10
+    - GT
+  expect:
+    stack: [0n]
+
+SLT:
+  code:
+    - PUSH1 0
+    - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff # -1
+    - SLT
+  expect:
+    stack: [1n]
+
+SLT (equal):
+  code:
+    - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff # -1
+    - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff # -1
+    - SLT
+  expect:
+    stack: [0n]
+
+SLT (greater):
+  code:
+    - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff # -1
+    - PUSH1 0
+    - SLT
+  expect:
+    stack: [0n]
+
+SGT:
+  code:
+    - PUSH1 9
+    - PUSH1 10
+    - SGT
+  expect:
+    stack: [1n]
+
+SGT (equal):
+  code:
+    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
+    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
+    - SGT
+  expect:
+    stack: [0n]
+
+SGT (less):
+  code:
+    - PUSH1 10
+    - PUSH1 11
+    - SGT
+  expect:
+    stack: [1n]
+
+EQ:
+  code:
+    - PUSH1 10
+    - PUSH1 10
+    - EQ
+  expect:
+    stack: [1n]
+
+EQ (not equal):
+  code:
+    - PUSH1 9
+    - PUSH1 10
+    - EQ
+  expect:
+    stack: [0n]
+
+ISZERO (not zero):
+  code:
+    - PUSH1 9
+    - ISZERO
+  expect:
+    stack: [0n]
+
+ISZERO (zero):
+  code:
+    - PUSH1 0
+    - ISZERO
+  expect:
+    stack: [1n]
+
+AND:
+  code:
+    - PUSH1 0xe
+    - PUSH1 0x3
+    - AND
+  expect:
+    stack: [2n]
+
+OR:
+  code:
+    - PUSH1 0xe
+    - PUSH1 0x3
+    - OR
+  expect:
+    stack: [0xfn]
+
+XOR:
+  code:
+    - PUSH1 0xf0
+    - PUSH1 0x0f
+    - XOR
+  expect:
+    stack: [0xffn]
+
+NOT:
+  code:
+    - PUSH1 0x0f
+    - NOT
+  expect:
+    stack: [0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0n]
+
+BYTE:
+  code:
+    - PUSH1 0xff
+    - PUSH1 31
+    - BYTE
+  expect:
+    stack: [0xffn]
+
+BYTE (30th):
+  code:
+    - PUSH2 0xff00
+    - PUSH1 30
+    - BYTE
+  expect:
+    stack: [0xffn]
+
+BYTE (29th):
+  code:
+    - PUSH3 0xff0000
+    - PUSH1 29
+    - BYTE
+  expect:
+    stack: [0xffn]
+
+BYTE (out of range):
+  code:
+    - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - PUSH1 42
+    - BYTE
+  expect:
+    stack: [0x0n]
+
+EXP:
+  todo: true
+
+SIGNEXTEND:
+  todo: true
+
+DUP1:
+  code:
+    - PUSH1 1
+    - DUP1
+    - ADD
+  expect:
+    stack: [2n]
+
+DUP3:
+  code:
+    - PUSH1 1 # [1]
+    - PUSH1 2 # [2, 1]
+    - PUSH1 3 # [3, 2, 1]
+    - DUP3
+  expect:
+    stack: [1n, 3n, 2n, 1n]
+
+SWAP:
+  code:
+    - PUSH1 1 # [1]
+    - PUSH1 2 # [2, 1]
+    - SWAP1 # [1, 2]
+  expect:
+    stack: [1n, 2n]
+
+SWAP3:
+  code:
+    - PUSH1 1 # [1]
+    - PUSH1 2 # [2, 1]
+    - PUSH1 3 # [3, 2, 1]
+    - PUSH1 4 # [4, 3, 2, 1]
+    - SWAP3 # [1, 3, 2, 4]
+  expect:
+    stack: [1n, 3n, 2n, 4n]
+
+JUMP:
+  code:
+    - PUSH1 5
+    - JUMP
+    - PUSH1 1
+    - JUMPDEST # location 5
+    - PUSH1 2
+  expect:
+    stack: [2n] # 1 is never on the stack
+
+JUMPI (no jump):
+  code:
+    - PUSH1 0
+    - PUSH1 7
+    - JUMPI
+    - PUSH1 1
+    - JUMPDEST
+    - PUSH1 2
+    - POP
+  expect:
+    stack: [1n]
+
+JUMPI (jump):
+  code:
+    - PUSH1 1
+    - PUSH1 7
+    - JUMPI
+    - PUSH1 1
+    - JUMPDEST
+    - PUSH1 2
+  expect:
+    stack: [2n]
+
+PC:
+  code:
+    - PC
+  expect:
+    stack: [0n]
+
+PC (more code):
+  code:
+    - PUSH1 0 # 2 bytes
+    - POP # 1 byte
+    - PC
+  expect:
+    stack: [3n]
+
+GAS:
+  todo: true
+
+MSTORE:
+  code:
+    - PUSH32 0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20
+    - PUSH1 0
+    - MSTORE
+    - PUSH1 0
+    - MLOAD
+  expect:
+    stack: [0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20n]
+
+MSTORE (tail):
+  code:
+    - PUSH32 0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20
+    - PUSH1 0
+    - MSTORE
+    - PUSH1 31
+    - MLOAD
+  expect:
+    stack: [0x2000000000000000000000000000000000000000000000000000000000000000n]
+
+MSTORE8:
+  code:
+    - PUSH1 0xff
+    - PUSH1 31
+    - MSTORE8
+    - PUSH1 0
+    - MLOAD
+  expect:
+    stack: [0xffn]
+
+MSIZE:
+  code:
+    - MSIZE
+  expect:
+    stack: [0n]
+
+MSIZE (0x20):
+  code:
+    - PUSH1 0
+    - MLOAD
+    - POP
+    - MSIZE
+  expect:
+    stack: [0x20n]
+
+MSIZE (0x60):
+  code:
+    - PUSH1 0x39
+    - MLOAD
+    - POP
+    - MSIZE
+  expect:
+    stack: [0x60n]
+
+MSIZE (after MSTORE):
+  code:
+    - PUSH1 0xff
+    - PUSH1 0xff
+    - MSTORE8
+    - MSIZE
+  expect:
+    stack: [0x100n]
+
+SHA3:
+  code:
+    - PUSH32 0xffffffff00000000000000000000000000000000000000000000000000000000
+    - PUSH1 0
+    - MSTORE
+    - PUSH1 4
+    - PUSH1 0
+    - SHA3
+  expect:
+    stack: [0x29045a592007d0c246ef02c2223570da9522d0cf0f73282c79a1bc8f0bb2c238n]
+
+ADDRESS:
+  tx:
+    to: 0xaaan
+  code:
+    - ADDRESS
+  expect:
+    stack: [0xaaan]
+
+CALLER:
+  tx:
+    from: 0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn
+  code:
+    - CALLER
+  expect:
+    stack: [0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn]
+
+BALANCE:
+  state:
+    0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn:
+      balance: 100n
+  code:
+    - PUSH20 0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d
+    - BALANCE
+  expect:
+    stack: [100n]
+
+BALANCE (empty):
+  code:
+    - PUSH20 0xaf69610ea9ddc95883f97a6a3171d52165b69b03
+    - BALANCE
+  expect:
+    stack: [0n]
+
+ORIGIN:
+  tx:
+    origin: 0x1337n
+  code:
+    - ORIGIN
+  expect:
+    stack: [0x1337n]
+
+COINBASE:
+  block:
+    coinbase: 0x777n
+  code:
+    - COINBASE
+  expect:
+    stack: [0x777n]
+
+TIMESTAMP:
+  block:
+    timestamp: 15000001n
+  code:
+    - TIMESTAMP
+  expect:
+    stack: [15000001n]
+
+NUMBER:
+  block:
+    number: 1000001n
+  code:
+    - NUMBER
+  expect:
+    stack: [1000001n]
+
+DIFFICULTY:
+  block:
+    difficulty: 0x20000n
+  code:
+    - DIFFICULTY
+  expect:
+    stack: [0x20000n]
+
+GASLIMIT:
+  block:
+    gaslimit: 0xffffffffffffn
+  code:
+    - GASLIMIT
+  expect:
+    stack: [0xffffffffffffn]
+
+GASPRICE:
+  tx:
+    gasprice: 99n
+  code:
+    - GASPRICE
+  expect:
+    stack: [99n]
+
+CHAINID:
+  block:
+    chainid: 1n
+  code:
+    - CHAINID
+  expect:
+    stack: [1n]
+
+BLOCKHASH:
+  todo: true
+
+CALLVALUE:
+  tx:
+    value: 1000n
+  code:
+    - CALLVALUE
+  expect:
+    stack: [1000n]
+
+CALLDATALOAD:
+  tx:
+    data: 000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff
+  code:
+    - PUSH1 0
+    - CALLDATALOAD
+  expect:
+    stack: [0x000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeffn]
+
+CALLDATALOAD (tail):
+  tx:
+    data: 000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff
+  code:
+    - PUSH1 31
+    - CALLDATALOAD
+  expect:
+    stack: [0xff00000000000000000000000000000000000000000000000000000000000000n]
+
+CALLDATASIZE:
+  tx:
+    data: 000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff
+  code:
+    - CALLDATASIZE
+  expect:
+    stack: [32n]
+
+CALLDATASIZE (no data):
+  code:
+    - CALLDATASIZE
+  expect:
+    stack: [0n]
+
+CALLDATACOPY:
+  tx:
+    data: 000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff
+  code:
+    - PUSH1 32
+    - PUSH1 0
+    - PUSH1 0
+    - CALLDATACOPY
+    - PUSH1 0
+    - MLOAD
+  expect:
+    stack: [0x000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeffn]
+
+CALLDATACOPY (tail):
+  tx:
+    data: 000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff
+  code:
+    - PUSH1 1
+    - PUSH1 31
+    - PUSH1 0
+    - CALLDATACOPY
+    - PUSH1 0
+    - MLOAD
+  expect:
+    stack: [0xff00000000000000000000000000000000000000000000000000000000000000n]
+
+CODESIZE (small):
+  code:
+    - CODESIZE # 1 byte
+  expect:
+    stack: [1n]
+
+CODESIZE:
+  code:
+    - PUSH20 0 # 21 bytes
+    - POP # 1 byte
+    - CODESIZE # 1 byte
+  expect:
+    stack: [23n]
+
+CODECOPY:
+  code:
+    - PUSH1 32
+    - PUSH1 0
+    - PUSH1 0
+    - CODECOPY
+    - PUSH1 0
+    - MLOAD
+  expect:
+    stack: [0x60_20_60_00_60_00_39_60_00_51_00000000000000000000000000000000000000000000n]
+
+CODECOPY (tail):
+  code:
+    - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - POP
+    - PUSH1 2
+    - PUSH1 32
+    - PUSH1 0
+    - CODECOPY
+    - PUSH1 0
+    - MLOAD
+  expect:
+    stack: [0xff_50_000000000000000000000000000000000000000000000000000000000000n]
+
+EXTCODESIZE (empty):
+  code:
+    - PUSH20 0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d
+    - EXTCODESIZE
+  expect:
+    stack: [0n]
+
+EXTCODESIZE:
+  state:
+    0x0000000000000000000000000000000000000aaan:
+      code:
+        - PUSH1 1 # 2 bytes
+  code:
+    - PUSH20 0x0000000000000000000000000000000000000aaa
+    - EXTCODESIZE
+  expect:
+    stack: [2n]
+
+EXTCODECOPY:
+  state:
+    0x0000000000000000000000000000000000000aaan:
+      code: '6001'
+  code:
+    - PUSH1 32
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH20 0x0000000000000000000000000000000000000aaa
+    - EXTCODECOPY
+    - PUSH1 0
+    - MLOAD
+  expect:
+    stack: [0x60_01_000000000000000000000000000000000000000000000000000000000000n]
+
+RETURNDATASIZE:
+  todo: true
+
+RETURNDATACOPY:
+  todo: true
+
+SELFBALANCE:
+  tx:
+    to: 0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn
+  state:
+    0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn:
+      balance: 200n
+  code:
+    - SELFBALANCE
+  expect:
+    stack: [200n]
+
+SSTORE:
+  code:
+    - PUSH1 1
+    - PUSH1 0
+    - SSTORE
+    - PUSH1 0
+    - SLOAD
+  expect:
+    stack: [1n]
+
+SSTORE (non-zero location):
+  code:
+    - PUSH1 2
+    - PUSH4 0x98fe5c2c
+    - SSTORE
+    - PUSH4 0x98fe5c2c
+    - SLOAD
+  expect:
+    stack: [2n]
+
+SLOAD:
+  code:
+    - PUSH1 0xff
+    - SLOAD
+  expect:
+    stack: [0n]
+
+LOG0:
+  todo: true
+
+LOG1:
+  todo: true
+
+LOG2:
+  todo: true
+
+LOG3:
+  todo: true
+
+LOG4:
+  todo: true
+
+RETURN:
+  code:
+    - PUSH1 0x42
+    - PUSH1 0
+    - MSTORE
+    - PUSH1 1
+    - PUSH1 31
+    - RETURN
+  expect:
+    success: true
+    return: '42'
+
+REVERT:
+  code:
+    - PUSH1 0x42
+    - PUSH1 0
+    - MSTORE
+    - PUSH1 1
+    - PUSH1 31
+    - REVERT
+  expect:
+    success: false
+    return: '42'
+
+CALL:
+  state:
+    0x0000000000000000000000000000000000000c42n:
+      code:
+        - PUSH1 0x42
+        - PUSH1 0
+        - MSTORE
+        - PUSH1 1
+        - PUSH1 31
+        - RETURN
+  code:
+    - PUSH1 1
+    - PUSH1 31
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH20 0x0000000000000000000000000000000000000c42
+    - PUSH1 0
+    - CALL
+    - PUSH1 0
+    - MLOAD
+  expect:
+    stack: [0x42n, 0x1n]
+
+CALL (returns address):
+  tx:
+    to: 0x0000000000000000000000000000000000000aaan
+  state:
+    0x0000000000000000000000000000000000000c42n:
+      code:
+        - CALLER
+        - PUSH1 0
+        - MSTORE
+        - PUSH1 32
+        - PUSH1 0
+        - RETURN
+  code:
+    - PUSH1 32
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH20 0x0000000000000000000000000000000000000c42
+    - PUSH1 0
+    - CALL
+    - PUSH1 0
+    - MLOAD
+  expect:
+    stack: [0xaaan, 0x1n]
+
+CALL (reverts):
+  state:
+    0x0000000000000000000000000000000000000c42n:
+      code:
+        - PUSH1 0x42
+        - PUSH1 0
+        - MSTORE
+        - PUSH1 1
+        - PUSH1 31
+        - REVERT
+  code:
+    - PUSH1 1
+    - PUSH1 31
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH20 0x0000000000000000000000000000000000000c42
+    - PUSH1 0
+    - CALL
+    - PUSH1 0
+    - MLOAD
+  expect:
+    stack: [0x42n, 0x0n]
+
+CREATE (empty):
+  tx:
+    to: 0x9bbfed6889322e016e0a02ee459d306fc19545d8n
+  code:
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH1 9
+    - CREATE
+    - BALANCE
+  expect:
+    stack: [9n]
+
+CREATE (with 4x FF):
+  tx:
+    to: 0x9bbfed6889322e016e0a02ee459d306fc19545d8n
+  code:
+    - PUSH1 32 # size for EXTCODECOPY
+    - PUSH1 0 # code offset
+    - PUSH1 0 # dest offset
+    - PUSH13 0x63FFFFFFFF6000526004601CF3
+    - PUSH1 0
+    - MSTORE
+    - PUSH1 13
+    - PUSH1 19
+    - PUSH1 0
+    - CREATE
+    - EXTCODECOPY
+    - PUSH1 0
+    - MLOAD
+  expect:
+    stack: [0xffffffff00000000000000000000000000000000000000000000000000000000n]
+
+CALLCODE:
+  todo: true
+
+DELEGATECALL:
+  todo: true
+
+CREATE2:
+  todo: true
+
+STATICCALL:
+  todo: true
+
+INVALID:
+  todo: true
+
+SELFDESTRUCT:
+  todo: true

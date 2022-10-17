@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "resolveJsonModule": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "noImplicitAny": false,
+    "declaration": true
+  }
+}

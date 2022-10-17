@@ -1,0 +1,1332 @@
+[
+  {
+    "name": "STOP",
+    "code": {
+      "asm": "STOP",
+      "bin": "00"
+    },
+    "expect": {
+      "success": true,
+      "stack": []
+    }
+  },
+  {
+    "name": "PUSH",
+    "code": {
+      "asm": "PUSH1 1",
+      "bin": "6001"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "PUSH (twice)",
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 2",
+      "bin": "60016002"
+    },
+    "expect": {
+      "stack": [
+        "2",
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "POP",
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 2\nPOP",
+      "bin": "6001600250"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "STOP (midway)",
+    "code": {
+      "asm": "PUSH1 1\nSTOP\nPUSH1 2",
+      "bin": "6001006002"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "ADD",
+    "code": {
+      "asm": "PUSH1 0x01\nPUSH1 0x02\nADD",
+      "bin": "6001600201"
+    },
+    "expect": {
+      "stack": [
+        "3"
+      ]
+    }
+  },
+  {
+    "name": "ADD (overflow)",
+    "code": {
+      "asm": "PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nPUSH1 0x02\nADD",
+      "bin": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600201"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "MUL",
+    "code": {
+      "asm": "PUSH1 0x02\nPUSH1 0x03\nMUL",
+      "bin": "6002600302"
+    },
+    "expect": {
+      "stack": [
+        "6"
+      ]
+    }
+  },
+  {
+    "name": "MUL (overflow)",
+    "code": {
+      "asm": "PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nPUSH1 0x02\nMUL",
+      "bin": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600202"
+    },
+    "expect": {
+      "stack": [
+        "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe"
+      ]
+    }
+  },
+  {
+    "name": "SUB",
+    "code": {
+      "asm": "PUSH1 0x02\nPUSH1 0x03\nSUB",
+      "bin": "6002600303"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "SUB (underflow)",
+    "code": {
+      "asm": "PUSH1 0x03\nPUSH1 0x02\nSUB",
+      "bin": "6003600203"
+    },
+    "expect": {
+      "stack": [
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ]
+    }
+  },
+  {
+    "name": "DIV",
+    "code": {
+      "asm": "PUSH1 0x02\nPUSH1 0x06\nDIV",
+      "bin": "6002600604"
+    },
+    "expect": {
+      "stack": [
+        "3"
+      ]
+    }
+  },
+  {
+    "name": "DIV (whole)",
+    "code": {
+      "asm": "PUSH1 0x06\nPUSH1 0x02\nDIV",
+      "bin": "6006600204"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "DIV (by zero)",
+    "code": {
+      "asm": "PUSH1 0x00\nPUSH1 0x02\nDIV",
+      "bin": "6000600204"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "SDIV",
+    "code": {
+      "asm": "PUSH1 10\nPUSH1 10\nSDIV",
+      "bin": "600a600a05"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "SDIV (negative)",
+    "code": {
+      "asm": "PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nPUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe\nSDIV",
+      "bin": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe05"
+    },
+    "expect": {
+      "stack": [
+        "2"
+      ]
+    }
+  },
+  {
+    "name": "SDIV (mix of negative and positive)",
+    "code": {
+      "asm": "PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe\nPUSH1 10\nSDIV",
+      "bin": "7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe600a05"
+    },
+    "expect": {
+      "stack": [
+        "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffb"
+      ]
+    }
+  },
+  {
+    "name": "MOD",
+    "code": {
+      "asm": "PUSH1 3\nPUSH1 10\nMOD",
+      "bin": "6003600a06"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "MOD (by larger number)",
+    "code": {
+      "asm": "PUSH1 17\nPUSH1 5\nMOD",
+      "bin": "6011600506"
+    },
+    "expect": {
+      "stack": [
+        "5"
+      ]
+    }
+  },
+  {
+    "name": "MOD (by zero)",
+    "code": {
+      "asm": "PUSH1 0\nPUSH1 2\nMOD",
+      "bin": "6000600206"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "SMOD",
+    "code": {
+      "asm": "PUSH1 3\nPUSH1 10\nSMOD",
+      "bin": "6003600a07"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "SMOD (negative)",
+    "code": {
+      "asm": "PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd\nPUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8\nSMOD",
+      "bin": "7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff807"
+    },
+    "expect": {
+      "stack": [
+        "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe"
+      ]
+    }
+  },
+  {
+    "name": "SMOD (by zero)",
+    "code": {
+      "asm": "PUSH1 0x00\nPUSH1 0x02\nSMOD",
+      "bin": "6000600207"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "LT",
+    "code": {
+      "asm": "PUSH1 10\nPUSH1 9\nLT",
+      "bin": "600a600910"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "LT (equal)",
+    "code": {
+      "asm": "PUSH1 10\nPUSH1 10\nLT",
+      "bin": "600a600a10"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "LT (greater)",
+    "code": {
+      "asm": "PUSH1 10\nPUSH1 11\nLT",
+      "bin": "600a600b10"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "GT",
+    "code": {
+      "asm": "PUSH1 9\nPUSH1 10\nGT",
+      "bin": "6009600a11"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "GT (equal)",
+    "code": {
+      "asm": "PUSH1 10\nPUSH1 10\nGT",
+      "bin": "600a600a11"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "GT (less)",
+    "code": {
+      "asm": "PUSH1 11\nPUSH1 10\nGT",
+      "bin": "600b600a11"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "SLT",
+    "code": {
+      "asm": "PUSH1 0\nPUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nSLT",
+      "bin": "60007fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff12"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "SLT (equal)",
+    "code": {
+      "asm": "PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nPUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nSLT",
+      "bin": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff12"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "SLT (greater)",
+    "code": {
+      "asm": "PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nPUSH1 0\nSLT",
+      "bin": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600012"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "SGT",
+    "code": {
+      "asm": "PUSH1 9\nPUSH1 10\nSGT",
+      "bin": "6009600a13"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "SGT (equal)",
+    "code": {
+      "asm": "PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe\nPUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe\nSGT",
+      "bin": "7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe13"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "SGT (less)",
+    "code": {
+      "asm": "PUSH1 10\nPUSH1 11\nSGT",
+      "bin": "600a600b13"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "EQ",
+    "code": {
+      "asm": "PUSH1 10\nPUSH1 10\nEQ",
+      "bin": "600a600a14"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "EQ (not equal)",
+    "code": {
+      "asm": "PUSH1 9\nPUSH1 10\nEQ",
+      "bin": "6009600a14"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "ISZERO (not zero)",
+    "code": {
+      "asm": "PUSH1 9\nISZERO",
+      "bin": "600915"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "ISZERO (zero)",
+    "code": {
+      "asm": "PUSH1 0\nISZERO",
+      "bin": "600015"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "AND",
+    "code": {
+      "asm": "PUSH1 0xe\nPUSH1 0x3\nAND",
+      "bin": "600e600316"
+    },
+    "expect": {
+      "stack": [
+        "2"
+      ]
+    }
+  },
+  {
+    "name": "OR",
+    "code": {
+      "asm": "PUSH1 0xe\nPUSH1 0x3\nOR",
+      "bin": "600e600317"
+    },
+    "expect": {
+      "stack": [
+        "0xf"
+      ]
+    }
+  },
+  {
+    "name": "XOR",
+    "code": {
+      "asm": "PUSH1 0xf0\nPUSH1 0x0f\nXOR",
+      "bin": "60f0600f18"
+    },
+    "expect": {
+      "stack": [
+        "0xff"
+      ]
+    }
+  },
+  {
+    "name": "NOT",
+    "code": {
+      "asm": "PUSH1 0x0f\nNOT",
+      "bin": "600f19"
+    },
+    "expect": {
+      "stack": [
+        "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0"
+      ]
+    }
+  },
+  {
+    "name": "BYTE",
+    "code": {
+      "asm": "PUSH1 0xff\nPUSH1 31\nBYTE",
+      "bin": "60ff601f1a"
+    },
+    "expect": {
+      "stack": [
+        "0xff"
+      ]
+    }
+  },
+  {
+    "name": "BYTE (30th)",
+    "code": {
+      "asm": "PUSH2 0xff00\nPUSH1 30\nBYTE",
+      "bin": "61ff00601e1a"
+    },
+    "expect": {
+      "stack": [
+        "0xff"
+      ]
+    }
+  },
+  {
+    "name": "BYTE (29th)",
+    "code": {
+      "asm": "PUSH3 0xff0000\nPUSH1 29\nBYTE",
+      "bin": "62ff0000601d1a"
+    },
+    "expect": {
+      "stack": [
+        "0xff"
+      ]
+    }
+  },
+  {
+    "name": "BYTE (out of range)",
+    "code": {
+      "asm": "PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nPUSH1 42\nBYTE",
+      "bin": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff602a1a"
+    },
+    "expect": {
+      "stack": [
+        "0x0"
+      ]
+    }
+  },
+  {
+    "name": "DUP1",
+    "code": {
+      "asm": "PUSH1 1\nDUP1\nADD",
+      "bin": "60018001"
+    },
+    "expect": {
+      "stack": [
+        "2"
+      ]
+    }
+  },
+  {
+    "name": "DUP3",
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 2\nPUSH1 3\nDUP3",
+      "bin": "60016002600382"
+    },
+    "expect": {
+      "stack": [
+        "1",
+        "3",
+        "2",
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "SWAP",
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 2\nSWAP1",
+      "bin": "6001600290"
+    },
+    "expect": {
+      "stack": [
+        "1",
+        "2"
+      ]
+    }
+  },
+  {
+    "name": "SWAP3",
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 2\nPUSH1 3\nPUSH1 4\nSWAP3",
+      "bin": "600160026003600492"
+    },
+    "expect": {
+      "stack": [
+        "1",
+        "3",
+        "2",
+        "4"
+      ]
+    }
+  },
+  {
+    "name": "JUMP",
+    "code": {
+      "asm": "PUSH1 5\nJUMP\nPUSH1 1\nJUMPDEST\nPUSH1 2",
+      "bin": "60055660015b6002"
+    },
+    "expect": {
+      "stack": [
+        "2"
+      ]
+    }
+  },
+  {
+    "name": "JUMPI (no jump)",
+    "code": {
+      "asm": "PUSH1 0\nPUSH1 7\nJUMPI\nPUSH1 1\nJUMPDEST\nPUSH1 2\nPOP",
+      "bin": "600060075760015b600250"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "JUMPI (jump)",
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 7\nJUMPI\nPUSH1 1\nJUMPDEST\nPUSH1 2",
+      "bin": "600160075760015b6002"
+    },
+    "expect": {
+      "stack": [
+        "2"
+      ]
+    }
+  },
+  {
+    "name": "PC",
+    "code": {
+      "asm": "PC",
+      "bin": "58"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "PC (more code)",
+    "code": {
+      "asm": "PUSH1 0\nPOP\nPC",
+      "bin": "60005058"
+    },
+    "expect": {
+      "stack": [
+        "3"
+      ]
+    }
+  },
+  {
+    "name": "MSTORE",
+    "code": {
+      "asm": "PUSH32 0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20\nPUSH1 0\nMSTORE\nPUSH1 0\nMLOAD",
+      "bin": "7f0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20600052600051"
+    },
+    "expect": {
+      "stack": [
+        "0x102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20"
+      ]
+    }
+  },
+  {
+    "name": "MSTORE (tail)",
+    "code": {
+      "asm": "PUSH32 0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20\nPUSH1 0\nMSTORE\nPUSH1 31\nMLOAD",
+      "bin": "7f0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20600052601f51"
+    },
+    "expect": {
+      "stack": [
+        "0x2000000000000000000000000000000000000000000000000000000000000000"
+      ]
+    }
+  },
+  {
+    "name": "MSTORE8",
+    "code": {
+      "asm": "PUSH1 0xff\nPUSH1 31\nMSTORE8\nPUSH1 0\nMLOAD",
+      "bin": "60ff601f53600051"
+    },
+    "expect": {
+      "stack": [
+        "0xff"
+      ]
+    }
+  },
+  {
+    "name": "MSIZE",
+    "code": {
+      "asm": "MSIZE",
+      "bin": "59"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "MSIZE (0x20)",
+    "code": {
+      "asm": "PUSH1 0\nMLOAD\nPOP\nMSIZE",
+      "bin": "6000515059"
+    },
+    "expect": {
+      "stack": [
+        "0x20"
+      ]
+    }
+  },
+  {
+    "name": "MSIZE (0x60)",
+    "code": {
+      "asm": "PUSH1 0x39\nMLOAD\nPOP\nMSIZE",
+      "bin": "6039515059"
+    },
+    "expect": {
+      "stack": [
+        "0x60"
+      ]
+    }
+  },
+  {
+    "name": "MSIZE (after MSTORE)",
+    "code": {
+      "asm": "PUSH1 0xff\nPUSH1 0xff\nMSTORE8\nMSIZE",
+      "bin": "60ff60ff5359"
+    },
+    "expect": {
+      "stack": [
+        "0x100"
+      ]
+    }
+  },
+  {
+    "name": "SHA3",
+    "code": {
+      "asm": "PUSH32 0xffffffff00000000000000000000000000000000000000000000000000000000\nPUSH1 0\nMSTORE\nPUSH1 4\nPUSH1 0\nSHA3",
+      "bin": "7fffffffff000000000000000000000000000000000000000000000000000000006000526004600020"
+    },
+    "expect": {
+      "stack": [
+        "0x29045a592007d0c246ef02c2223570da9522d0cf0f73282c79a1bc8f0bb2c238"
+      ]
+    }
+  },
+  {
+    "name": "ADDRESS",
+    "tx": {
+      "to": "0xaaa"
+    },
+    "code": {
+      "asm": "ADDRESS",
+      "bin": "30"
+    },
+    "expect": {
+      "stack": [
+        "0xaaa"
+      ]
+    }
+  },
+  {
+    "name": "CALLER",
+    "tx": {
+      "from": "0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d"
+    },
+    "code": {
+      "asm": "CALLER",
+      "bin": "33"
+    },
+    "expect": {
+      "stack": [
+        "0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d"
+      ]
+    }
+  },
+  {
+    "name": "BALANCE",
+    "state": {
+      "0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d": {
+        "balance": "100"
+      }
+    },
+    "code": {
+      "asm": "PUSH20 0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d\nBALANCE",
+      "bin": "731e79b045dc29eae9fdc69673c9dcd7c53e5e159d31"
+    },
+    "expect": {
+      "stack": [
+        "100"
+      ]
+    }
+  },
+  {
+    "name": "BALANCE (empty)",
+    "code": {
+      "asm": "PUSH20 0xaf69610ea9ddc95883f97a6a3171d52165b69b03\nBALANCE",
+      "bin": "73af69610ea9ddc95883f97a6a3171d52165b69b0331"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "ORIGIN",
+    "tx": {
+      "origin": "0x1337"
+    },
+    "code": {
+      "asm": "ORIGIN",
+      "bin": "32"
+    },
+    "expect": {
+      "stack": [
+        "0x1337"
+      ]
+    }
+  },
+  {
+    "name": "COINBASE",
+    "block": {
+      "coinbase": "0x777"
+    },
+    "code": {
+      "asm": "COINBASE",
+      "bin": "41"
+    },
+    "expect": {
+      "stack": [
+        "0x777"
+      ]
+    }
+  },
+  {
+    "name": "TIMESTAMP",
+    "block": {
+      "timestamp": "15000001"
+    },
+    "code": {
+      "asm": "TIMESTAMP",
+      "bin": "42"
+    },
+    "expect": {
+      "stack": [
+        "15000001"
+      ]
+    }
+  },
+  {
+    "name": "NUMBER",
+    "block": {
+      "number": "1000001"
+    },
+    "code": {
+      "asm": "NUMBER",
+      "bin": "43"
+    },
+    "expect": {
+      "stack": [
+        "1000001"
+      ]
+    }
+  },
+  {
+    "name": "DIFFICULTY",
+    "block": {
+      "difficulty": "0x20000"
+    },
+    "code": {
+      "asm": "DIFFICULTY",
+      "bin": "44"
+    },
+    "expect": {
+      "stack": [
+        "0x20000"
+      ]
+    }
+  },
+  {
+    "name": "GASLIMIT",
+    "block": {
+      "gaslimit": "0xffffffffffff"
+    },
+    "code": {
+      "asm": "GASLIMIT",
+      "bin": "45"
+    },
+    "expect": {
+      "stack": [
+        "0xffffffffffff"
+      ]
+    }
+  },
+  {
+    "name": "GASPRICE",
+    "tx": {
+      "gasprice": "99"
+    },
+    "code": {
+      "asm": "GASPRICE",
+      "bin": "3a"
+    },
+    "expect": {
+      "stack": [
+        "99"
+      ]
+    }
+  },
+  {
+    "name": "CHAINID",
+    "block": {
+      "chainid": "1"
+    },
+    "code": {
+      "asm": "CHAINID",
+      "bin": "46"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "CALLVALUE",
+    "tx": {
+      "value": "1000"
+    },
+    "code": {
+      "asm": "CALLVALUE",
+      "bin": "34"
+    },
+    "expect": {
+      "stack": [
+        "1000"
+      ]
+    }
+  },
+  {
+    "name": "CALLDATALOAD",
+    "tx": {
+      "data": "000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff"
+    },
+    "code": {
+      "asm": "PUSH1 0\nCALLDATALOAD",
+      "bin": "600035"
+    },
+    "expect": {
+      "stack": [
+        "0x102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff"
+      ]
+    }
+  },
+  {
+    "name": "CALLDATALOAD (tail)",
+    "tx": {
+      "data": "000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff"
+    },
+    "code": {
+      "asm": "PUSH1 31\nCALLDATALOAD",
+      "bin": "601f35"
+    },
+    "expect": {
+      "stack": [
+        "0xff00000000000000000000000000000000000000000000000000000000000000"
+      ]
+    }
+  },
+  {
+    "name": "CALLDATASIZE",
+    "tx": {
+      "data": "000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff"
+    },
+    "code": {
+      "asm": "CALLDATASIZE",
+      "bin": "36"
+    },
+    "expect": {
+      "stack": [
+        "32"
+      ]
+    }
+  },
+  {
+    "name": "CALLDATASIZE (no data)",
+    "code": {
+      "asm": "CALLDATASIZE",
+      "bin": "36"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "CALLDATACOPY",
+    "tx": {
+      "data": "000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff"
+    },
+    "code": {
+      "asm": "PUSH1 32\nPUSH1 0\nPUSH1 0\nCALLDATACOPY\nPUSH1 0\nMLOAD",
+      "bin": "60206000600037600051"
+    },
+    "expect": {
+      "stack": [
+        "0x102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff"
+      ]
+    }
+  },
+  {
+    "name": "CALLDATACOPY (tail)",
+    "tx": {
+      "data": "000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff"
+    },
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 31\nPUSH1 0\nCALLDATACOPY\nPUSH1 0\nMLOAD",
+      "bin": "6001601f600037600051"
+    },
+    "expect": {
+      "stack": [
+        "0xff00000000000000000000000000000000000000000000000000000000000000"
+      ]
+    }
+  },
+  {
+    "name": "CODESIZE (small)",
+    "code": {
+      "asm": "CODESIZE",
+      "bin": "38"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "CODESIZE",
+    "code": {
+      "asm": "PUSH20 0\nPOP\nCODESIZE",
+      "bin": "7300000000000000000000000000000000000000005038"
+    },
+    "expect": {
+      "stack": [
+        "23"
+      ]
+    }
+  },
+  {
+    "name": "CODECOPY",
+    "code": {
+      "asm": "PUSH1 32\nPUSH1 0\nPUSH1 0\nCODECOPY\nPUSH1 0\nMLOAD",
+      "bin": "60206000600039600051"
+    },
+    "expect": {
+      "stack": [
+        "0x6020600060003960005100000000000000000000000000000000000000000000"
+      ]
+    }
+  },
+  {
+    "name": "CODECOPY (tail)",
+    "code": {
+      "asm": "PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nPOP\nPUSH1 2\nPUSH1 32\nPUSH1 0\nCODECOPY\nPUSH1 0\nMLOAD",
+      "bin": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5060026020600039600051"
+    },
+    "expect": {
+      "stack": [
+        "0xff50000000000000000000000000000000000000000000000000000000000000"
+      ]
+    }
+  },
+  {
+    "name": "EXTCODESIZE (empty)",
+    "code": {
+      "asm": "PUSH20 0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d\nEXTCODESIZE",
+      "bin": "731e79b045dc29eae9fdc69673c9dcd7c53e5e159d3b"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "EXTCODESIZE",
+    "state": {
+      "0xaaa": {
+        "code": {
+          "asm": "PUSH1 1",
+          "bin": "6001"
+        }
+      }
+    },
+    "code": {
+      "asm": "PUSH20 0x0000000000000000000000000000000000000aaa\nEXTCODESIZE",
+      "bin": "730000000000000000000000000000000000000aaa3b"
+    },
+    "expect": {
+      "stack": [
+        "2"
+      ]
+    }
+  },
+  {
+    "name": "EXTCODECOPY",
+    "state": {
+      "0xaaa": {
+        "code": {
+          "asm": null,
+          "bin": "6001"
+        }
+      }
+    },
+    "code": {
+      "asm": "PUSH1 32\nPUSH1 0\nPUSH1 0\nPUSH20 0x0000000000000000000000000000000000000aaa\nEXTCODECOPY\nPUSH1 0\nMLOAD",
+      "bin": "602060006000730000000000000000000000000000000000000aaa3c600051"
+    },
+    "expect": {
+      "stack": [
+        "0x6001000000000000000000000000000000000000000000000000000000000000"
+      ]
+    }
+  },
+  {
+    "name": "SELFBALANCE",
+    "tx": {
+      "to": "0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d"
+    },
+    "state": {
+      "0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d": {
+        "balance": "200"
+      }
+    },
+    "code": {
+      "asm": "SELFBALANCE",
+      "bin": "47"
+    },
+    "expect": {
+      "stack": [
+        "200"
+      ]
+    }
+  },
+  {
+    "name": "SSTORE",
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 0\nSSTORE\nPUSH1 0\nSLOAD",
+      "bin": "6001600055600054"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "SSTORE (non-zero location)",
+    "code": {
+      "asm": "PUSH1 2\nPUSH4 0x98fe5c2c\nSSTORE\nPUSH4 0x98fe5c2c\nSLOAD",
+      "bin": "60026398fe5c2c556398fe5c2c54"
+    },
+    "expect": {
+      "stack": [
+        "2"
+      ]
+    }
+  },
+  {
+    "name": "SLOAD",
+    "code": {
+      "asm": "PUSH1 0xff\nSLOAD",
+      "bin": "60ff54"
+    },
+    "expect": {
+      "stack": [
+        "0"
+      ]
+    }
+  },
+  {
+    "name": "RETURN",
+    "code": {
+      "asm": "PUSH1 0x42\nPUSH1 0\nMSTORE\nPUSH1 1\nPUSH1 31\nRETURN",
+      "bin": "60426000526001601ff3"
+    },
+    "expect": {
+      "success": true,
+      "return": "42"
+    }
+  },
+  {
+    "name": "REVERT",
+    "code": {
+      "asm": "PUSH1 0x42\nPUSH1 0\nMSTORE\nPUSH1 1\nPUSH1 31\nREVERT",
+      "bin": "60426000526001601ffd"
+    },
+    "expect": {
+      "success": false,
+      "return": "42"
+    }
+  },
+  {
+    "name": "CALL",
+    "state": {
+      "0xc42": {
+        "code": {
+          "asm": "PUSH1 0x42\nPUSH1 0\nMSTORE\nPUSH1 1\nPUSH1 31\nRETURN",
+          "bin": "60426000526001601ff3"
+        }
+      }
+    },
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 31\nPUSH1 0\nPUSH1 0\nPUSH1 0\nPUSH20 0x0000000000000000000000000000000000000c42\nPUSH1 0\nCALL\nPUSH1 0\nMLOAD",
+      "bin": "6001601f600060006000730000000000000000000000000000000000000c426000f1600051"
+    },
+    "expect": {
+      "stack": [
+        "0x42",
+        "0x1"
+      ]
+    }
+  },
+  {
+    "name": "CALL (returns address)",
+    "tx": {
+      "to": "0xaaa"
+    },
+    "state": {
+      "0xc42": {
+        "code": {
+          "asm": "CALLER\nPUSH1 0\nMSTORE\nPUSH1 32\nPUSH1 0\nRETURN",
+          "bin": "3360005260206000f3"
+        }
+      }
+    },
+    "code": {
+      "asm": "PUSH1 32\nPUSH1 0\nPUSH1 0\nPUSH1 0\nPUSH1 0\nPUSH20 0x0000000000000000000000000000000000000c42\nPUSH1 0\nCALL\nPUSH1 0\nMLOAD",
+      "bin": "60206000600060006000730000000000000000000000000000000000000c426000f1600051"
+    },
+    "expect": {
+      "stack": [
+        "0xaaa",
+        "0x1"
+      ]
+    }
+  },
+  {
+    "name": "CALL (reverts)",
+    "state": {
+      "0xc42": {
+        "code": {
+          "asm": "PUSH1 0x42\nPUSH1 0\nMSTORE\nPUSH1 1\nPUSH1 31\nREVERT",
+          "bin": "60426000526001601ffd"
+        }
+      }
+    },
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 31\nPUSH1 0\nPUSH1 0\nPUSH1 0\nPUSH20 0x0000000000000000000000000000000000000c42\nPUSH1 0\nCALL\nPUSH1 0\nMLOAD",
+      "bin": "6001601f600060006000730000000000000000000000000000000000000c426000f1600051"
+    },
+    "expect": {
+      "stack": [
+        "0x42",
+        "0x0"
+      ]
+    }
+  },
+  {
+    "name": "CREATE (empty)",
+    "tx": {
+      "to": "0x9bbfed6889322e016e0a02ee459d306fc19545d8"
+    },
+    "code": {
+      "asm": "PUSH1 0\nPUSH1 0\nPUSH1 9\nCREATE\nBALANCE",
+      "bin": "600060006009f031"
+    },
+    "expect": {
+      "stack": [
+        "9"
+      ]
+    }
+  },
+  {
+    "name": "CREATE (with 4x FF)",
+    "tx": {
+      "to": "0x9bbfed6889322e016e0a02ee459d306fc19545d8"
+    },
+    "code": {
+      "asm": "PUSH1 32\nPUSH1 0\nPUSH1 0\nPUSH13 0x63FFFFFFFF6000526004601CF3\nPUSH1 0\nMSTORE\nPUSH1 13\nPUSH1 19\nPUSH1 0\nCREATE\nEXTCODECOPY\nPUSH1 0\nMLOAD",
+      "bin": "6020600060006c63ffffffff6000526004601cf3600052600d60136000f03c600051"
+    },
+    "expect": {
+      "stack": [
+        "0xffffffff00000000000000000000000000000000000000000000000000000000"
+      ]
+    }
+  }
+]

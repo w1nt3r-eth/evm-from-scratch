@@ -11,7 +11,7 @@ class JestEnvironmentFailFast extends ParentEnvironment {
       this.failedTest = true;
       showFailedTestOnExit(event);
     } else if (this.failedTest && event.name === "test_start") {
-      event.test.mode = "skip";
+      event.test.mode = "todo";
     }
 
     if (super.handleTestEvent) {

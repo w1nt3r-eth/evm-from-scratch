@@ -1043,7 +1043,45 @@ DELEGATECALL:
     stack: [0x1000000000000000000000000000000000000aaan, 1n]
 
 STATICCALL:
-  todo: true
+  state:
+    0x1000000000000000000000000000000000000c42n:
+      code:
+        - PUSH1 0x42
+        - PUSH1 0
+        - MSTORE
+        - PUSH1 1
+        - PUSH1 31
+        - RETURN
+  code:
+    - PUSH1 1
+    - PUSH1 31
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH20 0x1000000000000000000000000000000000000c42
+    - PUSH1 0
+    - STATICCALL
+    - PUSH1 0
+    - MLOAD
+  expect:
+    stack: [0x42n, 0x1n]
+
+STATICCALL (reverts on write):
+  state:
+    0x1000000000000000000000000000000000000c42n:
+      code:
+        - PUSH1 0x42
+        - PUSH1 0
+        - SSTORE
+  code:
+    - PUSH1 1
+    - PUSH1 31
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH20 0x1000000000000000000000000000000000000c42
+    - PUSH1 0
+    - STATICCALL
+  expect:
+    stack: [0x0n]
 
 CREATE (empty):
   tx:

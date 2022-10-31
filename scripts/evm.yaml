@@ -1193,4 +1193,25 @@ CREATE2:
   todo: true
 
 SELFDESTRUCT:
-  todo: true
+  state:
+    0xdead00000000000000000000000000000000deadn:
+      balance: 0x7n
+      code:
+        - PUSH20 0xa1c300000000000000000000000000000000a1c3
+        - SELFDESTRUCT
+  code:
+    - PUSH1 0
+    - DUP1
+    - DUP1
+    - DUP1
+    - DUP1
+    - PUSH20 0xdead00000000000000000000000000000000dead
+    - GAS
+    - CALL
+    - POP
+    - PUSH20 0xa1c300000000000000000000000000000000a1c3
+    - BALANCE
+    - PUSH20 0xdead00000000000000000000000000000000dead
+    - EXTCODESIZE
+  expect:
+    stack: [0x0n, 0x7n]

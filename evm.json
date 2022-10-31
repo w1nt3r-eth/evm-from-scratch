@@ -1592,5 +1592,27 @@
         "0"
       ]
     }
+  },
+  {
+    "name": "SELFDESTRUCT",
+    "state": {
+      "0xdead00000000000000000000000000000000dead": {
+        "balance": "0x7",
+        "code": {
+          "asm": "PUSH20 0xa1c300000000000000000000000000000000a1c3\nSELFDESTRUCT",
+          "bin": "73a1c300000000000000000000000000000000a1c3ff"
+        }
+      }
+    },
+    "code": {
+      "asm": "PUSH1 0\nDUP1\nDUP1\nDUP1\nDUP1\nPUSH20 0xdead00000000000000000000000000000000dead\nGAS\nCALL\nPOP\nPUSH20 0xa1c300000000000000000000000000000000a1c3\nBALANCE\nPUSH20 0xdead00000000000000000000000000000000dead\nEXTCODESIZE",
+      "bin": "60008080808073dead00000000000000000000000000000000dead5af15073a1c300000000000000000000000000000000a1c33173dead00000000000000000000000000000000dead3b"
+    },
+    "expect": {
+      "stack": [
+        "0x0",
+        "0x7"
+      ]
+    }
   }
 ]

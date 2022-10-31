@@ -775,12 +775,6 @@ EXTCODECOPY:
   expect:
     stack: [0x60_01_000000000000000000000000000000000000000000000000000000000000n]
 
-RETURNDATASIZE:
-  todo: true
-
-RETURNDATACOPY:
-  todo: true
-
 SELFBALANCE:
   tx:
     to: 0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn
@@ -1016,6 +1010,65 @@ CALL (reverts):
     - MLOAD
   expect:
     stack: [0x42n, 0x0n]
+
+RETURNDATASIZE (empty):
+  code:
+    - RETURNDATASIZE
+  expect:
+    stack: [0x0n]
+
+RETURNDATASIZE:
+  state:
+    0x1000000000000000000000000000000000000c42n:
+      code:
+        - PUSH1 0x42
+        - PUSH1 0
+        - MSTORE
+        - PUSH1 1
+        - PUSH1 31
+        - RETURN
+  code:
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH20 0x1000000000000000000000000000000000000c42
+    - PUSH1 0
+    - CALL
+    - POP
+    - RETURNDATASIZE
+  expect:
+    stack: [0x1n]
+
+RETURNDATACOPY:
+  state:
+    0x1000000000000000000000000000000000000c42n:
+      code:
+        - PUSH1 0x42
+        - PUSH1 0
+        - MSTORE
+        - PUSH1 1
+        - PUSH1 31
+        - RETURN
+  code:
+    - PUSH1 1
+    - PUSH1 31
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH1 0
+    - PUSH20 0x1000000000000000000000000000000000000c42
+    - PUSH1 0
+    - CALL
+    - POP
+    - PUSH1 1
+    - PUSH1 0
+    - PUSH1 0xff
+    - RETURNDATACOPY
+    - PUSH1 0xff
+    - MLOAD
+  expect:
+    stack: [0x4200000000000000000000000000000000000000000000000000000000000000n]
 
 CALLCODE:
   todo: true

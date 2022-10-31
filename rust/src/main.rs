@@ -23,6 +23,18 @@ struct Expect {
     ret: Option<String>,
 }
 
+// This parses an integer based off its prefix: 0x - base16, otherwise base10.
+fn parseUIntRadix(number: &String) -> Option<U256> {
+    let radix = if number.starts_with("0x") {
+        16
+    } else { 10 };
+    if let Ok(result) = U256::from_str_radix(number, radix) {
+        Some(result)
+    } else {
+        None
+    }
+}
+
 fn main() {
     let text = std::fs::read_to_string("../evm.json").unwrap();
     let data: Vec<Evmtest> = serde_json::from_str(&text).unwrap();
@@ -39,7 +51,7 @@ fn main() {
         let mut expected_stack: Vec<U256> = Vec::new();
         if let Some(ref stacks) = test.expect.stack {
             for stack in stacks {
-                expected_stack.push(stack.parse().unwrap());
+                expected_stack.push(parseUIntRadix(stack).unwrap());
             }
         }
 

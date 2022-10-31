@@ -619,39 +619,14 @@
     }
   },
   {
-    "name": "JUMP",
+    "name": "INVALID",
     "code": {
-      "asm": "PUSH1 5\nJUMP\nPUSH1 1\nJUMPDEST\nPUSH1 2",
-      "bin": "60055660015b6002"
+      "asm": "INVALID",
+      "bin": "fe"
     },
     "expect": {
-      "stack": [
-        "2"
-      ]
-    }
-  },
-  {
-    "name": "JUMPI (no jump)",
-    "code": {
-      "asm": "PUSH1 0\nPUSH1 7\nJUMPI\nPUSH1 1\nJUMPDEST\nPUSH1 2\nPOP",
-      "bin": "600060075760015b600250"
-    },
-    "expect": {
-      "stack": [
-        "1"
-      ]
-    }
-  },
-  {
-    "name": "JUMPI (jump)",
-    "code": {
-      "asm": "PUSH1 1\nPUSH1 7\nJUMPI\nPUSH1 1\nJUMPDEST\nPUSH1 2",
-      "bin": "600160075760015b6002"
-    },
-    "expect": {
-      "stack": [
-        "2"
-      ]
+      "success": false,
+      "stack": []
     }
   },
   {
@@ -687,6 +662,42 @@
     "expect": {
       "stack": [
         "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ]
+    }
+  },
+  {
+    "name": "JUMP",
+    "code": {
+      "asm": "PUSH1 5\nJUMP\nPUSH1 1\nJUMPDEST\nPUSH1 2",
+      "bin": "60055660015b6002"
+    },
+    "expect": {
+      "stack": [
+        "2"
+      ]
+    }
+  },
+  {
+    "name": "JUMPI (no jump)",
+    "code": {
+      "asm": "PUSH1 0\nPUSH1 7\nJUMPI\nPUSH1 1\nJUMPDEST\nPUSH1 2\nPOP",
+      "bin": "600060075760015b600250"
+    },
+    "expect": {
+      "stack": [
+        "1"
+      ]
+    }
+  },
+  {
+    "name": "JUMPI (jump)",
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 7\nJUMPI\nPUSH1 1\nJUMPDEST\nPUSH1 2",
+      "bin": "600160075760015b6002"
+    },
+    "expect": {
+      "stack": [
+        "2"
       ]
     }
   },

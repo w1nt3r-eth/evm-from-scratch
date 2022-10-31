@@ -411,6 +411,33 @@ SWAP3:
   expect:
     stack: [1n, 3n, 2n, 4n]
 
+INVALID:
+  code:
+    - INVALID
+  expect:
+    success: false
+    stack: []
+
+PC:
+  code:
+    - PC
+  expect:
+    stack: [0n]
+
+PC (more code):
+  code:
+    - PUSH1 0 # 2 bytes
+    - POP # 1 byte
+    - PC
+  expect:
+    stack: [3n]
+
+GAS:
+  code:
+    - GAS
+  expect:
+    stack: [0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn]
+
 JUMP:
   code:
     - PUSH1 5
@@ -443,26 +470,6 @@ JUMPI (jump):
     - PUSH1 2
   expect:
     stack: [2n]
-
-PC:
-  code:
-    - PC
-  expect:
-    stack: [0n]
-
-PC (more code):
-  code:
-    - PUSH1 0 # 2 bytes
-    - POP # 1 byte
-    - PC
-  expect:
-    stack: [3n]
-
-GAS:
-  code:
-    - GAS
-  expect:
-    stack: [0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn]
 
 MSTORE:
   code:
@@ -1183,9 +1190,6 @@ CREATE (reverts):
     stack: [0n]
 
 CREATE2:
-  todo: true
-
-INVALID:
   todo: true
 
 SELFDESTRUCT:

@@ -679,6 +679,18 @@
     }
   },
   {
+    "name": "GAS",
+    "code": {
+      "asm": "GAS",
+      "bin": "5a"
+    },
+    "expect": {
+      "stack": [
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ]
+    }
+  },
+  {
     "name": "MSTORE",
     "code": {
       "asm": "PUSH32 0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20\nPUSH1 0\nMSTORE\nPUSH1 0\nMLOAD",
@@ -1409,6 +1421,30 @@
     }
   },
   {
+    "name": "DELEGATECALL",
+    "tx": {
+      "to": "0x1000000000000000000000000000000000000aaa"
+    },
+    "state": {
+      "0xdddddddddddddddddddddddddddddddddddddddd": {
+        "code": {
+          "asm": "ADDRESS\nPUSH1 0\nSSTORE",
+          "bin": "30600055"
+        }
+      }
+    },
+    "code": {
+      "asm": "PUSH1 0\nDUP1\nDUP1\nDUP1\nPUSH20 0xdddddddddddddddddddddddddddddddddddddddd\nGAS\nDELEGATECALL\nPUSH1 0\nSLOAD",
+      "bin": "600080808073dddddddddddddddddddddddddddddddddddddddd5af4600054"
+    },
+    "expect": {
+      "stack": [
+        "0x1000000000000000000000000000000000000aaa",
+        "1"
+      ]
+    }
+  },
+  {
     "name": "CREATE (empty)",
     "tx": {
       "to": "0x9bbfed6889322e016e0a02ee459d306fc19545d8"
@@ -1435,6 +1471,21 @@
     "expect": {
       "stack": [
         "0xffffffff00000000000000000000000000000000000000000000000000000000"
+      ]
+    }
+  },
+  {
+    "name": "CREATE (reverts)",
+    "tx": {
+      "to": "0x9bbfed6889322e016e0a02ee459d306fc19545d8"
+    },
+    "code": {
+      "asm": "PUSH13 0x63FFFFFFFF6000526004601CFD\nPUSH1 0\nMSTORE\nPUSH1 13\nPUSH1 19\nPUSH1 0\nCREATE",
+      "bin": "6c63ffffffff6000526004601cfd600052600d60136000f0"
+    },
+    "expect": {
+      "stack": [
+        "0"
       ]
     }
   }

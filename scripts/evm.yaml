@@ -459,7 +459,10 @@ PC (more code):
     stack: [3n]
 
 GAS:
-  todo: true
+  code:
+    - GAS
+  expect:
+    stack: [0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn]
 
 MSTORE:
   code:
@@ -1014,6 +1017,34 @@ CALL (reverts):
   expect:
     stack: [0x42n, 0x0n]
 
+CALLCODE:
+  todo: true
+
+DELEGATECALL:
+  tx:
+    to: 0x1000000000000000000000000000000000000aaan
+  state:
+    0xddddddddddddddddddddddddddddddddddddddddn:
+      code:
+        - ADDRESS
+        - PUSH1 0
+        - SSTORE
+  code:
+    - PUSH1 0
+    - DUP1
+    - DUP1
+    - DUP1
+    - PUSH20 0xdddddddddddddddddddddddddddddddddddddddd
+    - GAS
+    - DELEGATECALL
+    - PUSH1 0
+    - SLOAD
+  expect:
+    stack: [0x1000000000000000000000000000000000000aaan, 1n]
+
+STATICCALL:
+  todo: true
+
 CREATE (empty):
   tx:
     to: 0x9bbfed6889322e016e0a02ee459d306fc19545d8n
@@ -1047,18 +1078,20 @@ CREATE (with 4x FF):
     stack: [0xffffffff00000000000000000000000000000000000000000000000000000000n]
 
 CREATE (reverts):
-  todo: true
-
-CALLCODE:
-  todo: true
-
-DELEGATECALL:
-  todo: true
+  tx:
+    to: 0x9bbfed6889322e016e0a02ee459d306fc19545d8n
+  code:
+    - PUSH13 0x63FFFFFFFF6000526004601CFD
+    - PUSH1 0
+    - MSTORE
+    - PUSH1 13
+    - PUSH1 19
+    - PUSH1 0
+    - CREATE
+  expect:
+    stack: [0n]
 
 CREATE2:
-  todo: true
-
-STATICCALL:
   todo: true
 
 INVALID:

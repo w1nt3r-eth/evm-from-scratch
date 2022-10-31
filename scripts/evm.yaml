@@ -564,12 +564,12 @@ CALLER:
 BALANCE:
   state:
     0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn:
-      balance: 100n
+      balance: 0x100n
   code:
     - PUSH20 0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d
     - BALANCE
   expect:
-    stack: [100n]
+    stack: [0x100n]
 
 BALANCE (empty):
   code:
@@ -604,11 +604,11 @@ TIMESTAMP:
 
 NUMBER:
   block:
-    number: 1000001n
+    number: 0x1000001n
   code:
     - NUMBER
   expect:
-    stack: [1000001n]
+    stack: [0x1000001n]
 
 DIFFICULTY:
   block:
@@ -628,11 +628,11 @@ GASLIMIT:
 
 GASPRICE:
   tx:
-    gasprice: 99n
+    gasprice: 0x99n
   code:
     - GASPRICE
   expect:
-    stack: [99n]
+    stack: [0x99n]
 
 CHAINID:
   block:
@@ -647,11 +647,11 @@ BLOCKHASH:
 
 CALLVALUE:
   tx:
-    value: 1000n
+    value: 0x1000n
   code:
     - CALLVALUE
   expect:
-    stack: [1000n]
+    stack: [0x1000n]
 
 CALLDATALOAD:
   tx:
@@ -787,11 +787,11 @@ SELFBALANCE:
     to: 0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn
   state:
     0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn:
-      balance: 200n
+      balance: 0x200n
   code:
     - SELFBALANCE
   expect:
-    stack: [200n]
+    stack: [0x200n]
 
 SSTORE:
   code:

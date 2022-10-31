@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+
+# EVM From Scratch
+# Python template
+#
+# To work on EVM From Scratch in Python:
+#
+# - Install Python3: https://www.python.org/downloads/
+# - Go to the `python` directory: `cd python`
+# - Edit `evm.py` (this file!), see TODO below
+# - Run `python3 evm.py` to run the tests
+
 import json
 import os
 
@@ -20,8 +31,7 @@ def test():
 
             expected_stack = [int(x, 16) for x in test['expect']['stack']]
             
-            # if any value differs:
-            if any(x != y for x, y in zip(stack, expected_stack)):
+            if stack != expected_stack:
                 print(f"❌ Test #{i + 1}/{total} {test['name']}")
                 print("Stack doesn't match")
                 print(" expected:", expected_stack)

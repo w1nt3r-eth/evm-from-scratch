@@ -1,3 +1,15 @@
+/**
+ * EVM From Scratch
+ * Go template
+ *
+ * To work on EVM From Scratch in Go:
+ *
+ * - Install Golang: https://golang.org/doc/install
+ * - Go to the `go` directory: `cd go`
+ * - Edit `evm.go` (this file!), see TODO below
+ * - Run `go run evm.go` to run the tests
+ */
+
 package main
 
 import (
@@ -28,6 +40,8 @@ type TestCase struct {
 
 func evm(code []byte) []big.Int {
 	var stack []big.Int
+
+	// TODO: Implement the EVM here!
 
 	return stack
 }

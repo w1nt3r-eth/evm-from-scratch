@@ -1,3 +1,16 @@
+/**
+ * EVM From Scratch
+ * JavaScript template
+ *
+ * To work on EVM From Scratch in JavaScript:
+ *
+ * - Install Node.js: https://nodejs.org/en/download/
+ * - Edit `javascript/evm.js` (this file!), see TODO below
+ * - Run `node javascript/evm.js` to run the tests
+ *
+ * If you prefer TypeScript, there's a sample TypeScript template in the `typescript` directory.
+ */
+
 function evm(code) {
   // TODO: Implement me
 
@@ -11,7 +24,7 @@ function tests() {
     new Uint8Array(hexString.match(/../g).map((byte) => parseInt(byte, 16)));
 
   const serializeBigInt = (key, value) =>
-    typeof value === "bigint" ? value.toString() : value;
+    typeof value === "bigint" ? "0x" + value.toString(16) : value;
 
   const total = Object.keys(tests).length;
   let passed = 0;
@@ -28,12 +41,15 @@ function tests() {
           JSON.stringify(result.stack, serializeBigInt) !==
           JSON.stringify(t.expect.stack, serializeBigInt)
         ) {
-          console.log("expected stack:", t.expect.stack.map(BigInt));
-          console.log("  actual stack:", result.stack);
+          console.log("expected stack:", t.expect.stack);
+          console.log(
+            "  actual stack:",
+            result.stack.map((b) => "0x" + b.toString(16))
+          );
           throw new Error("Stack mismatch");
         }
       } catch (e) {
-        console.log(`\n\nCode of the failing test (${name}):\n`);
+        console.log(`\n\nCode of the failing test (${t.name}):\n`);
         console.log(t.code.asm.replaceAll(/^/gm, "  "));
         console.log("\n");
         throw e;

@@ -40,10 +40,7 @@ function main() {
 
 function parseYamlBigInt(value) {
   if (typeof value === 'string' && value.match(/^(0x)?[0-9a-f_]+n$/)) {
-    return (
-      (value.startsWith('0x') ? '0x' : '') +
-      BigInt(value.replace(/n$/, '').replace(/_/g, '')).toString(value.startsWith('0x') ? 16 : 10)
-    );
+    return '0x' + BigInt(value.replace(/n$/, '').replace(/_/g, '')).toString(16);
   }
   return value;
 }

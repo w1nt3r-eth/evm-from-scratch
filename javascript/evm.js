@@ -23,9 +23,6 @@ function tests() {
   const hexStringToUint8Array = (hexString) =>
     new Uint8Array(hexString.match(/../g).map((byte) => parseInt(byte, 16)));
 
-  const serializeBigInt = (key, value) =>
-    typeof value === "bigint" ? "0x" + value.toString(16) : value;
-
   const total = Object.keys(tests).length;
   let passed = 0;
 
@@ -37,15 +34,12 @@ function tests() {
         // to pass down more arguments to the evm function
         const result = evm(hexStringToUint8Array(t.code.bin));
 
-        if (
-          JSON.stringify(result.stack, serializeBigInt) !==
-          JSON.stringify(t.expect.stack, serializeBigInt)
-        ) {
-          console.log("expected stack:", t.expect.stack);
-          console.log(
-            "  actual stack:",
-            result.stack.map((b) => "0x" + b.toString(16))
-          );
+        const expectedStackHex = t.expect.stack;
+        const actualStackHex = result.stack.map((v) => "0x" + v.toString(16));
+
+        if (expectedStackHex.join(",") !== actualStackHex.join(",")) {
+          console.log("expected stack:", expectedStackHex);
+          console.log("  actual stack:", actualStackHex);
           throw new Error("Stack mismatch");
         }
       } catch (e) {

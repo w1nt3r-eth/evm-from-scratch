@@ -109,30 +109,6 @@ DIV (by zero):
   expect:
     stack: [0n]
 
-SDIV:
-  code:
-    - PUSH1 10
-    - PUSH1 10
-    - SDIV
-  expect:
-    stack: [1n]
-
-SDIV (negative):
-  code:
-    - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff # -1
-    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
-    - SDIV
-  expect:
-    stack: [2n]
-
-SDIV (mix of negative and positive):
-  code:
-    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
-    - PUSH1 10
-    - SDIV
-  expect:
-    stack: [0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbn] # -5
-
 MOD:
   code:
     - PUSH1 3
@@ -156,6 +132,90 @@ MOD (by zero):
     - MOD
   expect:
     stack: [0n]
+
+ADDMOD:
+  code:
+    - PUSH1 8
+    - PUSH1 10
+    - PUSH1 10
+    - ADDMOD
+  expect:
+    stack: [4n]
+
+ADDMOD (wrapped):
+  code:
+    - PUSH1 2
+    - PUSH1 2
+    - PUSH32 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    - ADDMOD
+  expect:
+    stack: [1n]
+
+MULMOD:
+  code:
+    - PUSH1 8
+    - PUSH1 10
+    - PUSH1 10
+    - MULMOD
+  expect:
+    stack: [4n]
+
+MULMOD (wrapped):
+  code:
+    - PUSH1 12
+    - PUSH32 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    - PUSH32 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    - MULMOD
+  expect:
+    stack: [9n]
+
+EXP:
+  code:
+    - PUSH1 2
+    - PUSH1 10
+    - EXP
+  expect:
+    stack: [100n]
+
+SIGNEXTEND (positive):
+  code:
+    - PUSH1 0x7F
+    - PUSH1 0
+    - SIGNEXTEND
+  expect:
+    stack: [0x7fn]
+
+SIGNEXTEND (negative):
+  code:
+    - PUSH1 0xFF
+    - PUSH1 0
+    - SIGNEXTEND
+  expect:
+    stack: [0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn]
+
+SDIV:
+  code:
+    - PUSH1 10
+    - PUSH1 10
+    - SDIV
+  expect:
+    stack: [1n]
+
+SDIV (negative):
+  code:
+    - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff # -1
+    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
+    - SDIV
+  expect:
+    stack: [2n]
+
+SDIV (mix of negative and positive):
+  code:
+    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
+    - PUSH1 10
+    - SDIV
+  expect:
+    stack: [0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbn] # -5
 
 SMOD:
   code:
@@ -331,6 +391,86 @@ XOR:
   expect:
     stack: [0xffn]
 
+SHL:
+  code:
+    - PUSH1 1
+    - PUSH1 1
+    - SHL
+  expect:
+    stack: [2n]
+
+SHL (discards):
+  code:
+    - PUSH32 0xFF00000000000000000000000000000000000000000000000000000000000000
+    - PUSH1 4
+    - SHL
+  expect:
+    stack: [0xf000000000000000000000000000000000000000000000000000000000000000n]
+
+SHL (too large):
+  code:
+    - PUSH1 1
+    - PUSH4 0xFFFFFFFF
+    - SHL
+  expect:
+    stack: [0n]
+
+SHR:
+  code:
+    - PUSH1 2
+    - PUSH1 1
+    - SHR
+  expect:
+    stack: [1n]
+
+SHR (discards):
+  code:
+    - PUSH1 0xFF
+    - PUSH1 4
+    - SHR
+  expect:
+    stack: [0x0fn]
+
+SHR (too large):
+  code:
+    - PUSH1 1
+    - PUSH4 0xFFFFFFFF
+    - SHR
+  expect:
+    stack: [0n]
+
+SAR:
+  code:
+    - PUSH1 2
+    - PUSH1 1
+    - SAR
+  expect:
+    stack: [1n]
+
+SAR (fills 1s):
+  code:
+    - PUSH32 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00
+    - PUSH1 4
+    - SAR
+  expect:
+    stack: [0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0n]
+
+SAR (too large):
+  code:
+    - PUSH32 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00
+    - PUSH4 0xFFFFFFFF
+    - SAR
+  expect:
+    stack: [0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn]
+
+SAR (positive, too large):
+  code:
+    - PUSH32 0x0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00
+    - PUSH4 0xFFFFFFFF
+    - SAR
+  expect:
+    stack: [0x0n]
+
 NOT:
   code:
     - PUSH1 0x0f
@@ -369,12 +509,6 @@ BYTE (out of range):
     - BYTE
   expect:
     stack: [0x0n]
-
-EXP:
-  todo: true
-
-SIGNEXTEND:
-  todo: true
 
 DUP1:
   code:
@@ -634,6 +768,14 @@ GASPRICE:
   expect:
     stack: [0x99n]
 
+BASEFEE:
+  block:
+    basefee: 0x1n
+  code:
+    - BASEFEE
+  expect:
+    stack: [0x1n]
+
 CHAINID:
   block:
     chainid: 1n
@@ -643,7 +785,13 @@ CHAINID:
     stack: [1n]
 
 BLOCKHASH:
-  todo: true
+  block:
+    number: 0x1000001n
+  code:
+    - PUSH1 0
+    - BLOCKHASH
+  expect:
+    stack: [0x0n]
 
 CALLVALUE:
   tx:
@@ -781,6 +929,23 @@ EXTCODECOPY:
     - MLOAD
   expect:
     stack: [0x60_01_000000000000000000000000000000000000000000000000000000000000n]
+
+EXTCODEHASH:
+  state:
+    0x1000000000000000000000000000000000000aaan:
+      code: 'FFFFFFFF'
+  code:
+    - PUSH20 0x1000000000000000000000000000000000000aaa
+    - EXTCODEHASH
+  expect:
+    stack: [0x29045a592007d0c246ef02c2223570da9522d0cf0f73282c79a1bc8f0bb2c238n]
+
+EXTCODEHASH (empty):
+  code:
+    - PUSH20 0x1000000000000000000000000000000000000aaa
+    - EXTCODEHASH
+  expect:
+    stack: [0x0n]
 
 SELFBALANCE:
   tx:

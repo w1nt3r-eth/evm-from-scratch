@@ -168,42 +168,6 @@
     }
   },
   {
-    "name": "SDIV",
-    "code": {
-      "asm": "PUSH1 10\nPUSH1 10\nSDIV",
-      "bin": "600a600a05"
-    },
-    "expect": {
-      "stack": [
-        "0x1"
-      ]
-    }
-  },
-  {
-    "name": "SDIV (negative)",
-    "code": {
-      "asm": "PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nPUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe\nSDIV",
-      "bin": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe05"
-    },
-    "expect": {
-      "stack": [
-        "0x2"
-      ]
-    }
-  },
-  {
-    "name": "SDIV (mix of negative and positive)",
-    "code": {
-      "asm": "PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe\nPUSH1 10\nSDIV",
-      "bin": "7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe600a05"
-    },
-    "expect": {
-      "stack": [
-        "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffb"
-      ]
-    }
-  },
-  {
     "name": "MOD",
     "code": {
       "asm": "PUSH1 3\nPUSH1 10\nMOD",
@@ -236,6 +200,126 @@
     "expect": {
       "stack": [
         "0x0"
+      ]
+    }
+  },
+  {
+    "name": "ADDMOD",
+    "code": {
+      "asm": "PUSH1 8\nPUSH1 10\nPUSH1 10\nADDMOD",
+      "bin": "6008600a600a08"
+    },
+    "expect": {
+      "stack": [
+        "0x4"
+      ]
+    }
+  },
+  {
+    "name": "ADDMOD (wrapped)",
+    "code": {
+      "asm": "PUSH1 2\nPUSH1 2\nPUSH32 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nADDMOD",
+      "bin": "600260027fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff08"
+    },
+    "expect": {
+      "stack": [
+        "0x1"
+      ]
+    }
+  },
+  {
+    "name": "MULMOD",
+    "code": {
+      "asm": "PUSH1 8\nPUSH1 10\nPUSH1 10\nMULMOD",
+      "bin": "6008600a600a09"
+    },
+    "expect": {
+      "stack": [
+        "0x4"
+      ]
+    }
+  },
+  {
+    "name": "MULMOD (wrapped)",
+    "code": {
+      "asm": "PUSH1 12\nPUSH32 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nPUSH32 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nMULMOD",
+      "bin": "600c7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff09"
+    },
+    "expect": {
+      "stack": [
+        "0x9"
+      ]
+    }
+  },
+  {
+    "name": "EXP",
+    "code": {
+      "asm": "PUSH1 2\nPUSH1 10\nEXP",
+      "bin": "6002600a0a"
+    },
+    "expect": {
+      "stack": [
+        "0x64"
+      ]
+    }
+  },
+  {
+    "name": "SIGNEXTEND (positive)",
+    "code": {
+      "asm": "PUSH1 0x7F\nPUSH1 0\nSIGNEXTEND",
+      "bin": "607f60000b"
+    },
+    "expect": {
+      "stack": [
+        "0x7f"
+      ]
+    }
+  },
+  {
+    "name": "SIGNEXTEND (negative)",
+    "code": {
+      "asm": "PUSH1 0xFF\nPUSH1 0\nSIGNEXTEND",
+      "bin": "60ff60000b"
+    },
+    "expect": {
+      "stack": [
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ]
+    }
+  },
+  {
+    "name": "SDIV",
+    "code": {
+      "asm": "PUSH1 10\nPUSH1 10\nSDIV",
+      "bin": "600a600a05"
+    },
+    "expect": {
+      "stack": [
+        "0x1"
+      ]
+    }
+  },
+  {
+    "name": "SDIV (negative)",
+    "code": {
+      "asm": "PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\nPUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe\nSDIV",
+      "bin": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe05"
+    },
+    "expect": {
+      "stack": [
+        "0x2"
+      ]
+    }
+  },
+  {
+    "name": "SDIV (mix of negative and positive)",
+    "code": {
+      "asm": "PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe\nPUSH1 10\nSDIV",
+      "bin": "7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe600a05"
+    },
+    "expect": {
+      "stack": [
+        "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffb"
       ]
     }
   },
@@ -500,6 +584,126 @@
     "expect": {
       "stack": [
         "0xff"
+      ]
+    }
+  },
+  {
+    "name": "SHL",
+    "code": {
+      "asm": "PUSH1 1\nPUSH1 1\nSHL",
+      "bin": "600160011b"
+    },
+    "expect": {
+      "stack": [
+        "0x2"
+      ]
+    }
+  },
+  {
+    "name": "SHL (discards)",
+    "code": {
+      "asm": "PUSH32 0xFF00000000000000000000000000000000000000000000000000000000000000\nPUSH1 4\nSHL",
+      "bin": "7fff0000000000000000000000000000000000000000000000000000000000000060041b"
+    },
+    "expect": {
+      "stack": [
+        "0xf000000000000000000000000000000000000000000000000000000000000000"
+      ]
+    }
+  },
+  {
+    "name": "SHL (too large)",
+    "code": {
+      "asm": "PUSH1 1\nPUSH4 0xFFFFFFFF\nSHL",
+      "bin": "600163ffffffff1b"
+    },
+    "expect": {
+      "stack": [
+        "0x0"
+      ]
+    }
+  },
+  {
+    "name": "SHR",
+    "code": {
+      "asm": "PUSH1 2\nPUSH1 1\nSHR",
+      "bin": "600260011c"
+    },
+    "expect": {
+      "stack": [
+        "0x1"
+      ]
+    }
+  },
+  {
+    "name": "SHR (discards)",
+    "code": {
+      "asm": "PUSH1 0xFF\nPUSH1 4\nSHR",
+      "bin": "60ff60041c"
+    },
+    "expect": {
+      "stack": [
+        "0xf"
+      ]
+    }
+  },
+  {
+    "name": "SHR (too large)",
+    "code": {
+      "asm": "PUSH1 1\nPUSH4 0xFFFFFFFF\nSHR",
+      "bin": "600163ffffffff1c"
+    },
+    "expect": {
+      "stack": [
+        "0x0"
+      ]
+    }
+  },
+  {
+    "name": "SAR",
+    "code": {
+      "asm": "PUSH1 2\nPUSH1 1\nSAR",
+      "bin": "600260011d"
+    },
+    "expect": {
+      "stack": [
+        "0x1"
+      ]
+    }
+  },
+  {
+    "name": "SAR (fills 1s)",
+    "code": {
+      "asm": "PUSH32 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00\nPUSH1 4\nSAR",
+      "bin": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0060041d"
+    },
+    "expect": {
+      "stack": [
+        "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0"
+      ]
+    }
+  },
+  {
+    "name": "SAR (too large)",
+    "code": {
+      "asm": "PUSH32 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00\nPUSH4 0xFFFFFFFF\nSAR",
+      "bin": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0063ffffffff1d"
+    },
+    "expect": {
+      "stack": [
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ]
+    }
+  },
+  {
+    "name": "SAR (positive, too large)",
+    "code": {
+      "asm": "PUSH32 0x0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00\nPUSH4 0xFFFFFFFF\nSAR",
+      "bin": "7f0fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0063ffffffff1d"
+    },
+    "expect": {
+      "stack": [
+        "0x0"
       ]
     }
   },
@@ -962,6 +1166,21 @@
     }
   },
   {
+    "name": "BASEFEE",
+    "block": {
+      "basefee": "0x1"
+    },
+    "code": {
+      "asm": "BASEFEE",
+      "bin": "48"
+    },
+    "expect": {
+      "stack": [
+        "0x1"
+      ]
+    }
+  },
+  {
     "name": "CHAINID",
     "block": {
       "chainid": "0x1"
@@ -973,6 +1192,21 @@
     "expect": {
       "stack": [
         "0x1"
+      ]
+    }
+  },
+  {
+    "name": "BLOCKHASH",
+    "block": {
+      "number": "0x1000001"
+    },
+    "code": {
+      "asm": "PUSH1 0\nBLOCKHASH",
+      "bin": "600040"
+    },
+    "expect": {
+      "stack": [
+        "0x0"
       ]
     }
   },
@@ -1175,6 +1409,38 @@
     "expect": {
       "stack": [
         "0x6001000000000000000000000000000000000000000000000000000000000000"
+      ]
+    }
+  },
+  {
+    "name": "EXTCODEHASH",
+    "state": {
+      "0x1000000000000000000000000000000000000aaa": {
+        "code": {
+          "asm": null,
+          "bin": "FFFFFFFF"
+        }
+      }
+    },
+    "code": {
+      "asm": "PUSH20 0x1000000000000000000000000000000000000aaa\nEXTCODEHASH",
+      "bin": "731000000000000000000000000000000000000aaa3f"
+    },
+    "expect": {
+      "stack": [
+        "0x29045a592007d0c246ef02c2223570da9522d0cf0f73282c79a1bc8f0bb2c238"
+      ]
+    }
+  },
+  {
+    "name": "EXTCODEHASH (empty)",
+    "code": {
+      "asm": "PUSH20 0x1000000000000000000000000000000000000aaa\nEXTCODEHASH",
+      "bin": "731000000000000000000000000000000000000aaa3f"
+    },
+    "expect": {
+      "stack": [
+        "0x0"
       ]
     }
   },

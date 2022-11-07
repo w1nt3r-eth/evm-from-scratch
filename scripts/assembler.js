@@ -22,7 +22,7 @@ const OPCODES = {
   XOR: 0x18,
   NOT: 0x19,
   BYTE: 0x1a,
-  SHL: 0x1b,,
+  SHL: 0x1b,
   SHR: 0x1c,
   SAR: 0x1d,
   SHA3: 0x20,
@@ -175,3 +175,5 @@ module.exports = function assembler(code) {
   }
   return new Uint8Array(result);
 };
+
+module.exports.opcodes = OPCODES;

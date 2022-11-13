@@ -41,6 +41,7 @@ function main() {
     .map(([name, t]) => ({ name, ...t }))
     .map((t) => ({
       ...t,
+      hint: t.hint || '',
       expect: { ...t.expect, success: typeof t.expect.success === 'boolean' ? t.expect.success : true },
     }));
 

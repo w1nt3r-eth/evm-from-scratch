@@ -1,4 +1,5 @@
 STOP:
+  hint: ''
   code:
     - STOP
   expect:
@@ -6,12 +7,14 @@ STOP:
     stack: []
 
 PUSH:
+  hint: 'Read "Program Counter" section of the course learning materials for an example on how to parse the bytecode'
   code:
     - PUSH1 1
   expect:
     stack: [1n]
 
 PUSH (twice):
+  hint: 'Note the order of items on the stack. The tests expect the top of the stack to be the first element'
   code:
     - PUSH1 1
     - PUSH1 2
@@ -22,6 +25,7 @@ PUSH (twice):
     stack: [2n, 1n]
 
 POP:
+  hint: 'POP removes the top item from the stack and discards it'
   code:
     - PUSH1 1
     - PUSH1 2
@@ -30,6 +34,7 @@ POP:
     stack: [1n]
 
 STOP (midway):
+  hint: "Note that the `PUSH1 2` didn't execute because the program stops after STOP opcode"
   code:
     - PUSH1 1
     - STOP
@@ -38,6 +43,7 @@ STOP (midway):
     stack: [1n]
 
 ADD:
+  hint: 'ADD takes the first 2 items from the stack, adds them together and pushes the result'
   code:
     - PUSH1 0x01
     - PUSH1 0x02
@@ -46,6 +52,7 @@ ADD:
     stack: [3n]
 
 ADD (overflow):
+  hint: 'EVM operates with uint256, if you add 2 to the max possible value it overflows and wraps around'
   code:
     - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     - PUSH1 0x02
@@ -62,6 +69,7 @@ MUL:
     stack: [6n]
 
 MUL (overflow):
+  hint: 'All math is performed with implicit [mod 2^256]'
   code:
     - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     - PUSH1 0x02
@@ -70,6 +78,7 @@ MUL (overflow):
     stack: [0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffen]
 
 SUB:
+  hint: 'SUB takes the first element from the stack and subtracts the second element from the stack'
   code:
     - PUSH1 0x02
     - PUSH1 0x03
@@ -78,6 +87,7 @@ SUB:
     stack: [1n]
 
 SUB (underflow):
+  hint: 'Underflow works the same way as overflow, 3 - 2 wraps around and results in MAX_UINT256'
   code:
     - PUSH1 0x03
     - PUSH1 0x02
@@ -86,6 +96,7 @@ SUB (underflow):
     stack: [0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn]
 
 DIV:
+  hint: 'DIV takes the first element from the stack and divides it by the second element from the stack'
   code:
     - PUSH1 0x02
     - PUSH1 0x06
@@ -94,6 +105,7 @@ DIV:
     stack: [3n]
 
 DIV (whole):
+  hint: 'Fraction part of the division is discarded'
   code:
     - PUSH1 0x06
     - PUSH1 0x02
@@ -102,6 +114,7 @@ DIV (whole):
     stack: [0n]
 
 DIV (by zero):
+  hint: 'In EVM you can divide by zero! Modern Solidity protects from this by adding instructions that check for zero'
   code:
     - PUSH1 0x00
     - PUSH1 0x02
@@ -110,6 +123,7 @@ DIV (by zero):
     stack: [0n]
 
 MOD:
+  hint: '10 mod 3 = 1'
   code:
     - PUSH1 3
     - PUSH1 10
@@ -118,6 +132,7 @@ MOD:
     stack: [1n]
 
 MOD (by larger number):
+  hint: '5 mod 17 = 5'
   code:
     - PUSH1 17
     - PUSH1 5
@@ -126,6 +141,7 @@ MOD (by larger number):
     stack: [5n]
 
 MOD (by zero):
+  hint: 'In EVM you can divide by zero! Modern Solidity protects from this by adding instructions that check for zero'
   code:
     - PUSH1 0
     - PUSH1 2
@@ -134,6 +150,7 @@ MOD (by zero):
     stack: [0n]
 
 ADDMOD:
+  hint: '10 + 10 mod 8 = 4'
   code:
     - PUSH1 8
     - PUSH1 10
@@ -152,6 +169,7 @@ ADDMOD (wrapped):
     stack: [1n]
 
 MULMOD:
+  hint: '10 * 10 mod 8 = 4'
   code:
     - PUSH1 8
     - PUSH1 10
@@ -178,6 +196,7 @@ EXP:
     stack: [100n]
 
 SIGNEXTEND (positive):
+  hint: 'Read "Negative Numbers" section of the course learning materials. SIGNEXTEND has no effect on "positive" numbers'
   code:
     - PUSH1 0x7F
     - PUSH1 0
@@ -186,6 +205,7 @@ SIGNEXTEND (positive):
     stack: [0x7fn]
 
 SIGNEXTEND (negative):
+  hint: 'Read "Negative Numbers" section of the course learning materials. The first bit of 0xFF is 1, so it is a negative number and needs to be padded by 1s in front'
   code:
     - PUSH1 0xFF
     - PUSH1 0
@@ -194,6 +214,7 @@ SIGNEXTEND (negative):
     stack: [0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn]
 
 SDIV:
+  hint: 'Read "Negative Numbers" section of the course learning materials. SDIV works like DIV for "positive" numbers'
   code:
     - PUSH1 10
     - PUSH1 10
@@ -202,6 +223,7 @@ SDIV:
     stack: [1n]
 
 SDIV (negative):
+  hint: 'Read "Negative Numbers" section of the course learning materials. -2 / -1 = 2'
   code:
     - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff # -1
     - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
@@ -210,6 +232,7 @@ SDIV (negative):
     stack: [2n]
 
 SDIV (mix of negative and positive):
+  hint: 'Read "Negative Numbers" section of the course learning materials. 10 / -2 = -5'
   code:
     - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
     - PUSH1 10
@@ -218,6 +241,7 @@ SDIV (mix of negative and positive):
     stack: [0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbn] # -5
 
 SMOD:
+  hint: 'Read "Negative Numbers" section of the course learning materials. SMOD works like MOD for "positive" numbers'
   code:
     - PUSH1 3
     - PUSH1 10
@@ -226,6 +250,7 @@ SMOD:
     stack: [1n]
 
 SMOD (negative):
+  hint: 'Read "Negative Numbers" section of the course learning materials. -10 mod -3 = -1'
   code:
     - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd # -3
     - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8 # -10
@@ -233,15 +258,26 @@ SMOD (negative):
   expect:
     stack: [0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffen] # -1
 
-SMOD (by zero):
+SDIV (by zero):
+  hint: 'In EVM you can divide by zero'
   code:
     - PUSH1 0x00
-    - PUSH1 0x02
+    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd
+    - SDIV
+  expect:
+    stack: [0n]
+
+SMOD (by zero):
+  hint: 'In EVM you can divide by zero'
+  code:
+    - PUSH1 0x00
+    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd
     - SMOD
   expect:
     stack: [0n]
 
 LT:
+  hint: '9 < 10 = true (1)'
   code:
     - PUSH1 10
     - PUSH1 9
@@ -250,6 +286,7 @@ LT:
     stack: [1n]
 
 LT (equal):
+  hint: '10 < 10 = false (0)'
   code:
     - PUSH1 10
     - PUSH1 10
@@ -258,6 +295,7 @@ LT (equal):
     stack: [0n]
 
 LT (greater):
+  hint: '11 < 10 = false (0)'
   code:
     - PUSH1 10
     - PUSH1 11
@@ -266,6 +304,7 @@ LT (greater):
     stack: [0n]
 
 GT:
+  hint: '10 > 9 = true (1)'
   code:
     - PUSH1 9
     - PUSH1 10
@@ -274,6 +313,7 @@ GT:
     stack: [1n]
 
 GT (equal):
+  hint: '10 > 10 = false (0)'
   code:
     - PUSH1 10
     - PUSH1 10
@@ -282,6 +322,7 @@ GT (equal):
     stack: [0n]
 
 GT (less):
+  hint: '10 > 11 = false (0)'
   code:
     - PUSH1 11
     - PUSH1 10
@@ -290,6 +331,7 @@ GT (less):
     stack: [0n]
 
 SLT:
+  hint: 'Same as LT but treats arguments as signed numbers. -1 < 0 = true (1)'
   code:
     - PUSH1 0
     - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff # -1
@@ -298,6 +340,7 @@ SLT:
     stack: [1n]
 
 SLT (equal):
+  hint: 'Same as LT but treats arguments as signed numbers. -1 < -1 = false (0)'
   code:
     - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff # -1
     - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff # -1
@@ -306,6 +349,7 @@ SLT (equal):
     stack: [0n]
 
 SLT (greater):
+  hint: 'Same as LT but treats arguments as signed numbers. -1 < -1 = false (0)'
   code:
     - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff # -1
     - PUSH1 0
@@ -314,6 +358,7 @@ SLT (greater):
     stack: [0n]
 
 SGT:
+  hint: 'Same as GT but treats arguments as signed numbers. No effect on "positive" numbers: 10 > 9 = true (1)'
   code:
     - PUSH1 9
     - PUSH1 10
@@ -322,6 +367,7 @@ SGT:
     stack: [1n]
 
 SGT (equal):
+  hint: 'Same as GT but treats arguments as signed numbers. -2 > -2 = false (0)'
   code:
     - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
     - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
@@ -329,15 +375,17 @@ SGT (equal):
   expect:
     stack: [0n]
 
-SGT (less):
+SGT (greater):
+  hint: 'Same as GT but treats arguments as signed numbers. -2 > -3 = true (1)'
   code:
-    - PUSH1 10
-    - PUSH1 11
+    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd # -3
+    - PUSH32 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe # -2
     - SGT
   expect:
     stack: [1n]
 
 EQ:
+  hint: '10 == 10 = true (1)'
   code:
     - PUSH1 10
     - PUSH1 10
@@ -346,6 +394,7 @@ EQ:
     stack: [1n]
 
 EQ (not equal):
+  hint: '10 == 9 = false (0)'
   code:
     - PUSH1 9
     - PUSH1 10
@@ -354,6 +403,7 @@ EQ (not equal):
     stack: [0n]
 
 ISZERO (not zero):
+  hint: 'If the top element on the stack is not zero, pushes 0'
   code:
     - PUSH1 9
     - ISZERO
@@ -361,13 +411,23 @@ ISZERO (not zero):
     stack: [0n]
 
 ISZERO (zero):
+  hint: 'If the top element on the stack is zero, pushes 1'
   code:
     - PUSH1 0
     - ISZERO
   expect:
     stack: [1n]
 
+NOT:
+  hint: 'Bitwise NOT operation, flips every bit 1->0, 0->1'
+  code:
+    - PUSH1 0x0f
+    - NOT
+  expect:
+    stack: [0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0n]
+
 AND:
+  hint: 'Bitwise AND operation of the top 2 items on the stack'
   code:
     - PUSH1 0xe
     - PUSH1 0x3
@@ -376,6 +436,7 @@ AND:
     stack: [2n]
 
 OR:
+  hint: 'Bitwise OR operation of the top 2 items on the stack'
   code:
     - PUSH1 0xe
     - PUSH1 0x3
@@ -384,6 +445,7 @@ OR:
     stack: [0xfn]
 
 XOR:
+  hint: 'Bitwise XOR operation of the top 2 items on the stack'
   code:
     - PUSH1 0xf0
     - PUSH1 0x0f
@@ -392,6 +454,7 @@ XOR:
     stack: [0xffn]
 
 SHL:
+  hint: 'Bitwise shift left, 1 << 1 = 2'
   code:
     - PUSH1 1
     - PUSH1 1
@@ -400,6 +463,7 @@ SHL:
     stack: [2n]
 
 SHL (discards):
+  hint: 'Bits that end up outside MAX_UINT256 are discarded'
   code:
     - PUSH32 0xFF00000000000000000000000000000000000000000000000000000000000000
     - PUSH1 4
@@ -408,6 +472,7 @@ SHL (discards):
     stack: [0xf000000000000000000000000000000000000000000000000000000000000000n]
 
 SHL (too large):
+  hint: 'When shift amount is too large, returns zero'
   code:
     - PUSH1 1
     - PUSH4 0xFFFFFFFF
@@ -416,6 +481,7 @@ SHL (too large):
     stack: [0n]
 
 SHR:
+  hint: 'Bitwise shift right, 2 >> 1 = 1'
   code:
     - PUSH1 2
     - PUSH1 1
@@ -424,6 +490,7 @@ SHR:
     stack: [1n]
 
 SHR (discards):
+  hint: 'Bits that end up outside are discarded'
   code:
     - PUSH1 0xFF
     - PUSH1 4
@@ -432,6 +499,7 @@ SHR (discards):
     stack: [0x0fn]
 
 SHR (too large):
+  hint: 'When shift amount is too large, returns zero'
   code:
     - PUSH1 1
     - PUSH4 0xFFFFFFFF
@@ -440,6 +508,7 @@ SHR (too large):
     stack: [0n]
 
 SAR:
+  hint: Like SHR but treats the argument as signed number. No effect on "positive" numbers, 2 >> 1 = 1
   code:
     - PUSH1 2
     - PUSH1 1
@@ -448,6 +517,7 @@ SAR:
     stack: [1n]
 
 SAR (fills 1s):
+  hint: Note that unlike SHR, it fills the empty space with 1s
   code:
     - PUSH32 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00
     - PUSH1 4
@@ -456,6 +526,7 @@ SAR (fills 1s):
     stack: [0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0n]
 
 SAR (too large):
+  hint: 'When shift amount is too large and the first bit is 1, fills the whole number with 1s'
   code:
     - PUSH32 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00
     - PUSH4 0xFFFFFFFF
@@ -464,6 +535,7 @@ SAR (too large):
     stack: [0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn]
 
 SAR (positive, too large):
+  hint: 'When shift amount is too large and the first bit is 0, fills the whole number with 0s'
   code:
     - PUSH32 0x0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00
     - PUSH4 0xFFFFFFFF
@@ -471,14 +543,8 @@ SAR (positive, too large):
   expect:
     stack: [0x0n]
 
-NOT:
-  code:
-    - PUSH1 0x0f
-    - NOT
-  expect:
-    stack: [0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0n]
-
 BYTE:
+  hint: 'The value on the stack is treated as 32 bytes, take 31st (counting from the most significant one)'
   code:
     - PUSH1 0xff
     - PUSH1 31
@@ -487,6 +553,7 @@ BYTE:
     stack: [0xffn]
 
 BYTE (30th):
+  hint: 'The value on the stack is treated as 32 bytes, take 30st (counting from the most significant one)'
   code:
     - PUSH2 0xff00
     - PUSH1 30
@@ -495,6 +562,7 @@ BYTE (30th):
     stack: [0xffn]
 
 BYTE (29th):
+  hint: 'Try to generalize your code to work with any argument'
   code:
     - PUSH3 0xff0000
     - PUSH1 29
@@ -503,6 +571,7 @@ BYTE (29th):
     stack: [0xffn]
 
 BYTE (out of range):
+  hint: 'Treat other elements as zeros'
   code:
     - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     - PUSH1 42
@@ -511,6 +580,7 @@ BYTE (out of range):
     stack: [0x0n]
 
 DUP1:
+  hint: 'Duplicate the first element from the stack and push it onto the stack'
   code:
     - PUSH1 1
     - DUP1
@@ -519,6 +589,7 @@ DUP1:
     stack: [2n]
 
 DUP3:
+  hint: 'Duplicate the 3rd element from the stack and push it onto the stack'
   code:
     - PUSH1 1 # [1]
     - PUSH1 2 # [2, 1]
@@ -527,7 +598,35 @@ DUP3:
   expect:
     stack: [1n, 3n, 2n, 1n]
 
+DUP5:
+  hint: 'Try to implement your code to handle any DUP1...DUP16'
+  code:
+    - PUSH1 1 # [1]
+    - PUSH1 2 # [2, 1]
+    - PUSH1 3 # [3, 2, 1]
+    - PUSH1 4 # [4, 3, 2, 1]
+    - PUSH1 5 # [5, 4, 3, 2, 1]
+    - DUP5
+  expect:
+    stack: [1n, 5n, 4n, 3n, 2n, 1n]
+
+DUP8:
+  hint: 'No seriously try to implement your code to handle any DUP1...DUP16 generically. You can do OPCODE - DUP1 + 1 to learn which item to take from the stack'
+  code:
+    - PUSH1 1 # [1]
+    - PUSH1 2 # [2, 1]
+    - PUSH1 3 # [3, 2, 1]
+    - PUSH1 4 # [4, 3, 2, 1]
+    - PUSH1 5 # [5, 4, 3, 2, 1]
+    - PUSH1 6 # [6, 5, 4, 3, 2, 1]
+    - PUSH1 7 # [7, 6, 5, 4, 3, 2, 1]
+    - PUSH1 8 # [8, 7, 6, 5, 4, 3, 2, 1]
+    - DUP8
+  expect:
+    stack: [1n, 8n, 7n, 6n, 5n, 4n, 3n, 2n, 1n]
+
 SWAP:
+  hint: 'Swap the top item from the stack with the 1st one after that'
   code:
     - PUSH1 1 # [1]
     - PUSH1 2 # [2, 1]
@@ -536,6 +635,7 @@ SWAP:
     stack: [1n, 2n]
 
 SWAP3:
+  hint: 'Swap the top item from the stack with the 3rd one after that'
   code:
     - PUSH1 1 # [1]
     - PUSH1 2 # [2, 1]
@@ -545,7 +645,36 @@ SWAP3:
   expect:
     stack: [1n, 3n, 2n, 4n]
 
+SWAP5:
+  hint: 'Swap the top item from the stack with the 5th one after that. Try to implement SWAP1..SWAP16 with the same code'
+  code:
+    - PUSH1 1 # [1]
+    - PUSH1 2 # [2, 1]
+    - PUSH1 3 # [3, 2, 1]
+    - PUSH1 4 # [4, 3, 2, 1]
+    - PUSH1 5 # [5, 4, 3, 2, 1]
+    - PUSH1 6 # [6, 5, 4, 3, 2, 1]
+    - SWAP5
+  expect:
+    stack: [1n, 5n, 4n, 3n, 2n, 6n]
+
+SWAP7:
+  hint: 'No seriously try to implement your code to handle any SWAP1...SWAP16 generically. You can do OPCODE - SWAP1 + 2 to learn which item to take from the stack'
+  code:
+    - PUSH1 1 # [1]
+    - PUSH1 2 # [2, 1]
+    - PUSH1 3 # [3, 2, 1]
+    - PUSH1 4 # [4, 3, 2, 1]
+    - PUSH1 5 # [5, 4, 3, 2, 1]
+    - PUSH1 6 # [6, 5, 4, 3, 2, 1]
+    - PUSH1 7 # [7, 6, 5, 4, 3, 2, 1]
+    - PUSH1 8 # [8, 7, 6, 5, 4, 3, 2, 1]
+    - SWAP7
+  expect:
+    stack: [1n, 7n, 6n, 5n, 4n, 3n, 2n, 8n]
+
 INVALID:
+  hint: 'Invalid instruction. Note that your code is expected to return success = false, not throw exceptions'
   code:
     - INVALID
   expect:
@@ -553,12 +682,14 @@ INVALID:
     stack: []
 
 PC:
+  hint: 'Read "Program Counter" section of the course learning materials'
   code:
     - PC
   expect:
     stack: [0n]
 
 PC (more code):
+  hint: '`PUSH1 0` is counted as 2 bytes (even though it is a single instruction)'
   code:
     - PUSH1 0 # 2 bytes
     - POP # 1 byte
@@ -567,12 +698,14 @@ PC (more code):
     stack: [3n]
 
 GAS:
+  hint: 'In this version of the tests, GAS is not supported yet and is always expected to return MAX_UINT256'
   code:
     - GAS
   expect:
     stack: [0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn]
 
 JUMP:
+  hint: 'Set the Program Counter (PC) to the top value from the stack'
   code:
     - PUSH1 5
     - JUMP
@@ -582,7 +715,29 @@ JUMP:
   expect:
     stack: [2n] # 1 is never on the stack
 
+JUMP (not JUMPDEST):
+  hint: 'Offset 4 is not a valid JUMPDEST instruction'
+  code:
+    - PUSH1 3
+    - JUMP
+    - PUSH1 1
+  expect:
+    success: false
+    stack: []
+
+JUMP (bad instruction boundry):
+  hint: 'See "9.4.3. Jump Destination Validity" of the Yellow Paper https://ethereum.github.io/yellowpaper/paper.pdf'
+  code:
+    - PUSH1 4
+    - JUMP
+    - PUSH1 0x5b
+    - PUSH1 0xff
+  expect:
+    success: false
+    stack: []
+
 JUMPI (no jump):
+  hint: 'Conditional JUMP, second argument is 0, not jumping'
   code:
     - PUSH1 0
     - PUSH1 7
@@ -595,6 +750,7 @@ JUMPI (no jump):
     stack: [1n]
 
 JUMPI (jump):
+  hint: 'Conditional JUMP, second argument is not 0, jumping'
   code:
     - PUSH1 1
     - PUSH1 7
@@ -606,6 +762,7 @@ JUMPI (jump):
     stack: [2n]
 
 MSTORE:
+  hint: 'Read "Memory" section of the course learning materials before implementing memory opcodes'
   code:
     - PUSH32 0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20
     - PUSH1 0
@@ -616,6 +773,7 @@ MSTORE:
     stack: [0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20n]
 
 MSTORE (tail):
+  hint: 'MLOAD starts from byte offset 31 and picks up the last byte (0x20), the rest of the memory is 00'
   code:
     - PUSH32 0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20
     - PUSH1 0
@@ -626,6 +784,7 @@ MSTORE (tail):
     stack: [0x2000000000000000000000000000000000000000000000000000000000000000n]
 
 MSTORE8:
+  hint: 'Store a single byte at the given offset'
   code:
     - PUSH1 0xff
     - PUSH1 31
@@ -636,12 +795,14 @@ MSTORE8:
     stack: [0xffn]
 
 MSIZE:
+  hint: 'No memory has been accessed, so the memory size is 0'
   code:
     - MSIZE
   expect:
     stack: [0n]
 
 MSIZE (0x20):
+  hint: 'The first 32-byte section has been accessed, so the memory size is 32 (0x20)'
   code:
     - PUSH1 0
     - MLOAD
@@ -651,6 +812,7 @@ MSIZE (0x20):
     stack: [0x20n]
 
 MSIZE (0x60):
+  hint: 'Memory is measured in 32-byte chunks'
   code:
     - PUSH1 0x39
     - MLOAD
@@ -659,7 +821,8 @@ MSIZE (0x60):
   expect:
     stack: [0x60n]
 
-MSIZE (after MSTORE):
+MSIZE (after MSTORE8):
+  hint: 'Any opcode touching memory should update MSIZE, including the future ones. Implement memory access in a way that automatically updates MSIZE no matter which opcode used it'
   code:
     - PUSH1 0xff
     - PUSH1 0xff
@@ -669,6 +832,7 @@ MSIZE (after MSTORE):
     stack: [0x100n]
 
 SHA3:
+  hint: 'Use an existing library for your programming language. Note that even though the opcode is called SHA3, the algorythm used is keccak256'
   code:
     - PUSH32 0xffffffff00000000000000000000000000000000000000000000000000000000
     - PUSH1 0
@@ -680,6 +844,7 @@ SHA3:
     stack: [0x29045a592007d0c246ef02c2223570da9522d0cf0f73282c79a1bc8f0bb2c238n]
 
 ADDRESS:
+  hint: 'Read "Transaction" section of the course learning materials. Change your evm function parameters list to include transaction data'
   tx:
     to: 0x1000000000000000000000000000000000000aaan
   code:
@@ -688,6 +853,7 @@ ADDRESS:
     stack: [0x1000000000000000000000000000000000000aaan]
 
 CALLER:
+  hint: 'Solidity calls this msg.sender'
   tx:
     from: 0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn
   code:
@@ -695,70 +861,14 @@ CALLER:
   expect:
     stack: [0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn]
 
-BALANCE:
-  state:
-    0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn:
-      balance: 0x100n
-  code:
-    - PUSH20 0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d
-    - BALANCE
-  expect:
-    stack: [0x100n]
-
-BALANCE (empty):
-  code:
-    - PUSH20 0xaf69610ea9ddc95883f97a6a3171d52165b69b03
-    - BALANCE
-  expect:
-    stack: [0n]
-
 ORIGIN:
+  hint: 'Solidity calls this tx.origin'
   tx:
     origin: 0x1337n
   code:
     - ORIGIN
   expect:
     stack: [0x1337n]
-
-COINBASE:
-  block:
-    coinbase: 0x777n
-  code:
-    - COINBASE
-  expect:
-    stack: [0x777n]
-
-TIMESTAMP:
-  block:
-    timestamp: 15000001n
-  code:
-    - TIMESTAMP
-  expect:
-    stack: [15000001n]
-
-NUMBER:
-  block:
-    number: 0x1000001n
-  code:
-    - NUMBER
-  expect:
-    stack: [0x1000001n]
-
-DIFFICULTY:
-  block:
-    difficulty: 0x20000n
-  code:
-    - DIFFICULTY
-  expect:
-    stack: [0x20000n]
-
-GASLIMIT:
-  block:
-    gaslimit: 0xffffffffffffn
-  code:
-    - GASLIMIT
-  expect:
-    stack: [0xffffffffffffn]
 
 GASPRICE:
   tx:
@@ -776,6 +886,59 @@ BASEFEE:
   expect:
     stack: [0x1n]
 
+COINBASE:
+  hint: 'Do not hardcode these numbers, pull them from the test cases'
+  block:
+    coinbase: 0x777n
+  code:
+    - COINBASE
+  expect:
+    stack: [0x777n]
+
+COINBASE (different one):
+  hint: 'Do not hardcode these numbers, pull them from the test cases'
+  block:
+    coinbase: 0x888n
+  code:
+    - COINBASE
+  expect:
+    stack: [0x888n]
+
+TIMESTAMP:
+  hint: 'Solidity calls this block.timestamp'
+  block:
+    timestamp: 15000001n
+  code:
+    - TIMESTAMP
+  expect:
+    stack: [15000001n]
+
+NUMBER:
+  hint: 'Solidity calls this block.number'
+  block:
+    number: 0x1000001n
+  code:
+    - NUMBER
+  expect:
+    stack: [0x1000001n]
+
+DIFFICULTY:
+  hint: 'Also known as PREVRANDAO, not used in these test cases yet'
+  block:
+    difficulty: 0x20000n
+  code:
+    - DIFFICULTY
+  expect:
+    stack: [0x20000n]
+
+GASLIMIT:
+  block:
+    gaslimit: 0xffffffffffffn
+  code:
+    - GASLIMIT
+  expect:
+    stack: [0xffffffffffffn]
+
 CHAINID:
   block:
     chainid: 1n
@@ -785,15 +948,34 @@ CHAINID:
     stack: [1n]
 
 BLOCKHASH:
-  block:
-    number: 0x1000001n
+  hint: 'Not used in this test suite, can return 0'
   code:
     - PUSH1 0
     - BLOCKHASH
   expect:
     stack: [0x0n]
 
+BALANCE:
+  hint: 'Read "State" section of the course learning materials. Modify your evm function to take state as one of the arguments, or turn it into a class'
+  state:
+    0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159dn:
+      balance: 0x100n
+  code:
+    - PUSH20 0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d
+    - BALANCE
+  expect:
+    stack: [0x100n]
+
+BALANCE (empty):
+  hint: 'Balance of accounts not present in state is zero'
+  code:
+    - PUSH20 0xaf69610ea9ddc95883f97a6a3171d52165b69b03
+    - BALANCE
+  expect:
+    stack: [0n]
+
 CALLVALUE:
+  hint: 'Read "Calls" section of the course learning materials. Solidity calls this msg.value, it is amount of wei sent as part of this transaction'
   tx:
     value: 0x1000n
   code:
@@ -802,6 +984,7 @@ CALLVALUE:
     stack: [0x1000n]
 
 CALLDATALOAD:
+  hint: 'Read "Calls" section of the course learning materials. Calldata is an array of bytes sent to the evm function'
   tx:
     data: 000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff
   code:
@@ -811,6 +994,7 @@ CALLDATALOAD:
     stack: [0x000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeffn]
 
 CALLDATALOAD (tail):
+  hint: 'Overflow bytes filled with zeros'
   tx:
     data: 000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff
   code:
@@ -820,6 +1004,7 @@ CALLDATALOAD (tail):
     stack: [0xff00000000000000000000000000000000000000000000000000000000000000n]
 
 CALLDATASIZE:
+  hint: 'Size (in bytes) of calldata buffer'
   tx:
     data: 000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff
   code:
@@ -834,6 +1019,7 @@ CALLDATASIZE (no data):
     stack: [0n]
 
 CALLDATACOPY:
+  hint: 'Copy 32-byte chunk of calldata into memory. Do not forget to update MSIZE after CALLDATACOPY'
   tx:
     data: 000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff
   code:
@@ -847,6 +1033,7 @@ CALLDATACOPY:
     stack: [0x000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeffn]
 
 CALLDATACOPY (tail):
+  hint: 'Overflow bytes filled with zeros'
   tx:
     data: 000102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff
   code:
@@ -860,6 +1047,7 @@ CALLDATACOPY (tail):
     stack: [0xff00000000000000000000000000000000000000000000000000000000000000n]
 
 CODESIZE (small):
+  hint: 'Size of the bytecode running in the current context'
   code:
     - CODESIZE # 1 byte
   expect:
@@ -874,6 +1062,7 @@ CODESIZE:
     stack: [23n]
 
 CODECOPY:
+  hint: 'Copy your own code into memory. Implementing quines in EVM is really easy'
   code:
     - PUSH1 32
     - PUSH1 0
@@ -885,6 +1074,7 @@ CODECOPY:
     stack: [0x60_20_60_00_60_00_39_60_00_51_00000000000000000000000000000000000000000000n]
 
 CODECOPY (tail):
+  hint: 'Overflow bytes filled with zeros'
   code:
     - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     - POP
@@ -905,6 +1095,7 @@ EXTCODESIZE (empty):
     stack: [0n]
 
 EXTCODESIZE:
+  hint: 'Read "State" section of the course learning materials'
   state:
     0x1000000000000000000000000000000000000aaan:
       code:
@@ -931,6 +1122,7 @@ EXTCODECOPY:
     stack: [0x60_01_000000000000000000000000000000000000000000000000000000000000n]
 
 EXTCODEHASH:
+  hint: 'Use the same library you used for SHA3 opcode'
   state:
     0x1000000000000000000000000000000000000aaan:
       code: 'FFFFFFFF'
@@ -959,6 +1151,7 @@ SELFBALANCE:
     stack: [0x200n]
 
 SSTORE:
+  hint: 'Read "Storage" section of the course learning materials'
   code:
     - PUSH1 1
     - PUSH1 0
@@ -979,6 +1172,7 @@ SSTORE (non-zero location):
     stack: [2n]
 
 SLOAD (empty):
+  hint: 'All storage is initialized to zeros'
   code:
     - PUSH1 0xff
     - SLOAD
@@ -986,6 +1180,7 @@ SLOAD (empty):
     stack: [0n]
 
 LOG0:
+  hint: 'Make evm function return array of logs, modify the testing code to assert that the logs match'
   tx:
     to: 0x1000000000000000000000000000000000000001n
   code:
@@ -1002,6 +1197,7 @@ LOG0:
         topics: []
 
 LOG1:
+  hint: 'Make evm function return array of logs, modify the testing code to assert that the logs match'
   tx:
     to: 0x1000000000000000000000000000000000000001n
   code:
@@ -1020,6 +1216,7 @@ LOG1:
           - 0x1111111111111111111111111111111111111111111111111111111111111111n
 
 LOG2:
+  hint: 'Use the same code to handle LOG1...LOG4 opcodes'
   tx:
     to: 0x1000000000000000000000000000000000000001n
   code:
@@ -1040,6 +1237,7 @@ LOG2:
           - 0x1111111111111111111111111111111111111111111111111111111111111111n
 
 LOG3:
+  hint: 'N = OPCODE - LOG0, pop N items from the stack as topics'
   tx:
     to: 0x1000000000000000000000000000000000000001n
   code:
@@ -1062,6 +1260,7 @@ LOG3:
           - 0x1111111111111111111111111111111111111111111111111111111111111111n
 
 LOG4:
+  hint: 'Refactoring code is always a good idea. Your code will become cleaner, and the tests will catch if something breaks'
   tx:
     to: 0x1000000000000000000000000000000000000001n
   code:
@@ -1086,6 +1285,7 @@ LOG4:
           - 0x1111111111111111111111111111111111111111111111111111111111111111n
 
 RETURN:
+  hint: 'Read "Calls and Returns" section of the course learning materials'
   code:
     - PUSH1 0xA2
     - PUSH1 0
@@ -1098,6 +1298,7 @@ RETURN:
     return: 'a2'
 
 REVERT:
+  hint: 'Note that this test expects `success` to be false'
   code:
     - PUSH1 0xF1
     - PUSH1 0
@@ -1110,6 +1311,7 @@ REVERT:
     return: 'f1'
 
 CALL:
+  hint: 'Read "Calls and Returns" section of the course learning materials. Recursively call evm function from itself when handing this opcode'
   state:
     0x1000000000000000000000000000000000000c42n:
       code:
@@ -1134,6 +1336,7 @@ CALL:
     stack: [0x42n, 0x1n]
 
 CALL (returns address):
+  hint: 'In the inner context, the CALLER is the contract we are sending the initial transaction to'
   tx:
     to: 0x1000000000000000000000000000000000000aaan
   state:
@@ -1160,6 +1363,7 @@ CALL (returns address):
     stack: [0x1000000000000000000000000000000000000aaan, 0x1n]
 
 CALL (reverts):
+  hint: 'Reverts can also return data'
   state:
     0x1000000000000000000000000000000000000c42n:
       code:
@@ -1246,6 +1450,7 @@ CALLCODE:
   todo: true
 
 DELEGATECALL:
+  hint: 'Like CALL, but keep the transaction data (from, origin, address) and use the code from the other account'
   tx:
     to: 0x1000000000000000000000000000000000000aaan
   state:
@@ -1268,6 +1473,7 @@ DELEGATECALL:
     stack: [0x1000000000000000000000000000000000000aaan, 1n]
 
 STATICCALL:
+  hint: 'Like CALL, but disable state modifications'
   state:
     0x1000000000000000000000000000000000000c42n:
       code:
@@ -1291,6 +1497,7 @@ STATICCALL:
     stack: [0x42n, 0x1n]
 
 STATICCALL (reverts on write):
+  hint: 'Use a flag to tell the evm function whenever the context is writeable (CALL) or not (STATICCALL)'
   state:
     0x1000000000000000000000000000000000000c42n:
       code:
@@ -1309,6 +1516,7 @@ STATICCALL (reverts on write):
     stack: [0x0n]
 
 CREATE (empty):
+  hint: 'Read "Creating new contracts" section of the course learning materials. This code creates a new empty account with balance 9'
   tx:
     to: 0x9bbfed6889322e016e0a02ee459d306fc19545d8n
   code:
@@ -1321,6 +1529,7 @@ CREATE (empty):
     stack: [9n]
 
 CREATE (with 4x FF):
+  hint: 'Read "Creating new contracts" section of the course learning materials. CALL with the given code, store the returned bytes as new contracts bytecode'
   tx:
     to: 0x9bbfed6889322e016e0a02ee459d306fc19545d8n
   code:
@@ -1341,6 +1550,7 @@ CREATE (with 4x FF):
     stack: [0xffffffff00000000000000000000000000000000000000000000000000000000n]
 
 CREATE (reverts):
+  hint: 'No address when constructor code reverts'
   tx:
     to: 0x9bbfed6889322e016e0a02ee459d306fc19545d8n
   code:
@@ -1358,6 +1568,7 @@ CREATE2:
   todo: true
 
 SELFDESTRUCT:
+  hint: 'Note that for simplicity, this opcode should delete the account from the state. In the real EVM this happens only after the transaction has been processed, but that would overcomplicate these tests'
   state:
     0xdead00000000000000000000000000000000deadn:
       balance: 0x7n

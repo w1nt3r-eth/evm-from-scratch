@@ -34,6 +34,7 @@ type expect struct {
 
 type TestCase struct {
 	Name   string
+	Hint   string
 	Code   code
 	Expect expect
 }
@@ -91,6 +92,7 @@ func main() {
 			fmt.Printf("Instructions: \n%v\n", test.Code.Asm)
 			fmt.Printf("Expected: %v\n", toStrings(expectedStack))
 			fmt.Printf("Got: %v\n\n", toStrings(stack))
+			fmt.Printf("Hint: %v\n\n", test.Hint)
 			fmt.Printf("Progress: %v/%v\n\n", index, len(payload))
 			log.Fatal("Stack mismatch")
 		}

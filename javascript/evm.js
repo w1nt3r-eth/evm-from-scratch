@@ -51,6 +51,7 @@ function tests() {
       } catch (e) {
         console.log(`\n\nCode of the failing test (${t.name}):\n`);
         console.log(t.code.asm.replaceAll(/^/gm, "  "));
+        console.log(`\n\nHint: ${t.hint}\n`);
         console.log("\n");
         throw e;
       }

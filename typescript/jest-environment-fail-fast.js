@@ -35,6 +35,7 @@ function showFailedTestOnExit(event) {
           : t.code.bin) +
         "\n\n"
     );
+    t.hint && process.stdout.write(`\n\nHint: ${t.hint}\n\n`);
   });
 }
 

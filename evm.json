@@ -2245,6 +2245,7 @@
   },
   {
     "name": "CREATE (reverts)",
+    "hint": "No address when constructor code reverts",
     "tx": {
       "to": "0x9bbfed6889322e016e0a02ee459d306fc19545d8"
     },
@@ -2257,11 +2258,11 @@
         "0x0"
       ],
       "success": true
-    },
-    "hint": ""
+    }
   },
   {
     "name": "SELFDESTRUCT",
+    "hint": "Note that for simplicity, this opcode should delete the account from the state. In the real EVM this happens only after the transaction has been processed, but that would overcomplicate these tests",
     "state": {
       "0xdead00000000000000000000000000000000dead": {
         "balance": "0x7",
@@ -2281,7 +2282,6 @@
         "0x7"
       ],
       "success": true
-    },
-    "hint": ""
+    }
   }
 ]

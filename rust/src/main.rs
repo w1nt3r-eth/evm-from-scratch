@@ -18,22 +18,11 @@ struct Code {
 #[derive(Debug, Deserialize)]
 struct Expect {
     stack: Option<Vec<String>>,
-    success: Option<bool>,
-    #[serde(rename = "return")]
-    ret: Option<String>,
+    success: bool,
+    // #[serde(rename = "return")]
+    // ret: Option<String>,
 }
 
-// This parses an integer based off its prefix: 0x - base16, otherwise base10.
-fn parseUIntRadix(number: &String) -> Option<U256> {
-    let radix = if number.starts_with("0x") {
-        16
-    } else { 10 };
-    if let Ok(result) = U256::from_str_radix(number, radix) {
-        Some(result)
-    } else {
-        None
-    }
-}
 
 fn main() {
     let text = std::fs::read_to_string("../evm.json").unwrap();
@@ -46,36 +35,40 @@ fn main() {
 
         let code: Vec<u8> = hex::decode(&test.code.bin).unwrap();
 
-        let actual_stack = evm(&code);
+        let result = evm(&code);
 
         let mut expected_stack: Vec<U256> = Vec::new();
         if let Some(ref stacks) = test.expect.stack {
-            for stack in stacks {
-                expected_stack.push(parseUIntRadix(stack).unwrap());
+            for value in stacks {
+                expected_stack.push(U256::from_str_radix(value, 16).unwrap());
             }
         }
 
-        let mut matching = actual_stack.len() == expected_stack.len();
+        let mut matching = result.stack.len() == expected_stack.len();
         if matching {
-            for i in 0..actual_stack.len() {
-                if actual_stack[i] != expected_stack[i] {
+            for i in 0..result.stack.len() {
+                if result.stack[i] != expected_stack[i] {
                     matching = false;
                     break;
                 }
             }
         }
+        
+        matching = matching && result.success == test.expect.success;
 
         if !matching {
             println!("Instructions: \n{}\n", test.code.asm);
 
-            println!("Expected: [");
+            println!("Expected success: {:?}", test.expect.success);
+            println!("Expected stack: [");
             for v in expected_stack {
                 println!("  {:#X},", v);
             }
             println!("]\n");
-
-            println!("Got: [");
-            for v in actual_stack {
+            
+            println!("Actual success: {:?}", result.success);
+            println!("Actual stack: [");
+            for v in result.stack {
                 println!("  {:#X},", v);
             }
             println!("]\n");

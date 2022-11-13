@@ -19,7 +19,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -32,7 +33,8 @@
       "stack": [
         "0x2",
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -44,7 +46,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -56,7 +59,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -68,7 +72,8 @@
     "expect": {
       "stack": [
         "0x3"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -80,7 +85,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -92,7 +98,8 @@
     "expect": {
       "stack": [
         "0x6"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -104,7 +111,8 @@
     "expect": {
       "stack": [
         "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -116,7 +124,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -128,7 +137,8 @@
     "expect": {
       "stack": [
         "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -140,7 +150,8 @@
     "expect": {
       "stack": [
         "0x3"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -152,7 +163,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -164,7 +176,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -176,7 +189,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -188,7 +202,8 @@
     "expect": {
       "stack": [
         "0x5"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -200,7 +215,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -212,7 +228,8 @@
     "expect": {
       "stack": [
         "0x4"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -224,7 +241,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -236,7 +254,8 @@
     "expect": {
       "stack": [
         "0x4"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -248,7 +267,8 @@
     "expect": {
       "stack": [
         "0x9"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -260,7 +280,8 @@
     "expect": {
       "stack": [
         "0x64"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -272,7 +293,8 @@
     "expect": {
       "stack": [
         "0x7f"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -284,7 +306,8 @@
     "expect": {
       "stack": [
         "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -296,7 +319,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -308,7 +332,8 @@
     "expect": {
       "stack": [
         "0x2"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -320,7 +345,8 @@
     "expect": {
       "stack": [
         "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffb"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -332,7 +358,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -344,7 +371,8 @@
     "expect": {
       "stack": [
         "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -356,7 +384,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -368,7 +397,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -380,7 +410,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -392,7 +423,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -404,7 +436,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -416,7 +449,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -428,7 +462,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -440,7 +475,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -452,7 +488,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -464,7 +501,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -476,7 +514,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -488,7 +527,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -500,7 +540,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -512,7 +553,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -524,7 +566,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -536,7 +579,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -548,7 +592,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -560,7 +605,8 @@
     "expect": {
       "stack": [
         "0x2"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -572,7 +618,8 @@
     "expect": {
       "stack": [
         "0xf"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -584,7 +631,8 @@
     "expect": {
       "stack": [
         "0xff"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -596,7 +644,8 @@
     "expect": {
       "stack": [
         "0x2"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -608,7 +657,8 @@
     "expect": {
       "stack": [
         "0xf000000000000000000000000000000000000000000000000000000000000000"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -620,7 +670,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -632,7 +683,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -644,7 +696,8 @@
     "expect": {
       "stack": [
         "0xf"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -656,7 +709,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -668,7 +722,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -680,7 +735,8 @@
     "expect": {
       "stack": [
         "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -692,7 +748,8 @@
     "expect": {
       "stack": [
         "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -704,7 +761,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -716,7 +774,8 @@
     "expect": {
       "stack": [
         "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -728,7 +787,8 @@
     "expect": {
       "stack": [
         "0xff"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -740,7 +800,8 @@
     "expect": {
       "stack": [
         "0xff"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -752,7 +813,8 @@
     "expect": {
       "stack": [
         "0xff"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -764,7 +826,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -776,7 +839,8 @@
     "expect": {
       "stack": [
         "0x2"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -791,7 +855,8 @@
         "0x3",
         "0x2",
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -804,7 +869,8 @@
       "stack": [
         "0x1",
         "0x2"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -819,7 +885,8 @@
         "0x3",
         "0x2",
         "0x4"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -842,7 +909,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -854,7 +922,8 @@
     "expect": {
       "stack": [
         "0x3"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -866,7 +935,8 @@
     "expect": {
       "stack": [
         "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -878,7 +948,8 @@
     "expect": {
       "stack": [
         "0x2"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -890,7 +961,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -902,7 +974,8 @@
     "expect": {
       "stack": [
         "0x2"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -914,7 +987,8 @@
     "expect": {
       "stack": [
         "0x102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -926,7 +1000,8 @@
     "expect": {
       "stack": [
         "0x2000000000000000000000000000000000000000000000000000000000000000"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -938,7 +1013,8 @@
     "expect": {
       "stack": [
         "0xff"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -950,7 +1026,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -962,7 +1039,8 @@
     "expect": {
       "stack": [
         "0x20"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -974,7 +1052,8 @@
     "expect": {
       "stack": [
         "0x60"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -986,7 +1065,8 @@
     "expect": {
       "stack": [
         "0x100"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -998,7 +1078,8 @@
     "expect": {
       "stack": [
         "0x29045a592007d0c246ef02c2223570da9522d0cf0f73282c79a1bc8f0bb2c238"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1013,7 +1094,8 @@
     "expect": {
       "stack": [
         "0x1000000000000000000000000000000000000aaa"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1028,7 +1110,8 @@
     "expect": {
       "stack": [
         "0x1e79b045dc29eae9fdc69673c9dcd7c53e5e159d"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1045,7 +1128,8 @@
     "expect": {
       "stack": [
         "0x100"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1057,7 +1141,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1072,7 +1157,8 @@
     "expect": {
       "stack": [
         "0x1337"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1087,7 +1173,8 @@
     "expect": {
       "stack": [
         "0x777"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1102,7 +1189,8 @@
     "expect": {
       "stack": [
         "0xe4e1c1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1117,7 +1205,8 @@
     "expect": {
       "stack": [
         "0x1000001"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1132,7 +1221,8 @@
     "expect": {
       "stack": [
         "0x20000"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1147,7 +1237,8 @@
     "expect": {
       "stack": [
         "0xffffffffffff"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1162,7 +1253,8 @@
     "expect": {
       "stack": [
         "0x99"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1177,7 +1269,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1192,7 +1285,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1207,7 +1301,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1222,7 +1317,8 @@
     "expect": {
       "stack": [
         "0x1000"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1237,7 +1333,8 @@
     "expect": {
       "stack": [
         "0x102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1252,7 +1349,8 @@
     "expect": {
       "stack": [
         "0xff00000000000000000000000000000000000000000000000000000000000000"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1267,7 +1365,8 @@
     "expect": {
       "stack": [
         "0x20"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1279,7 +1378,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1294,7 +1394,8 @@
     "expect": {
       "stack": [
         "0x102030405060708090a0b0c0d0e0f00112233445566778899aabbccddeeff"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1309,7 +1410,8 @@
     "expect": {
       "stack": [
         "0xff00000000000000000000000000000000000000000000000000000000000000"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1321,7 +1423,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1333,7 +1436,8 @@
     "expect": {
       "stack": [
         "0x17"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1345,7 +1449,8 @@
     "expect": {
       "stack": [
         "0x6020600060003960005100000000000000000000000000000000000000000000"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1357,7 +1462,8 @@
     "expect": {
       "stack": [
         "0xff50000000000000000000000000000000000000000000000000000000000000"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1369,7 +1475,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1389,7 +1496,8 @@
     "expect": {
       "stack": [
         "0x2"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1409,7 +1517,8 @@
     "expect": {
       "stack": [
         "0x6001000000000000000000000000000000000000000000000000000000000000"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1429,7 +1538,8 @@
     "expect": {
       "stack": [
         "0x29045a592007d0c246ef02c2223570da9522d0cf0f73282c79a1bc8f0bb2c238"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1441,7 +1551,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1461,7 +1572,8 @@
     "expect": {
       "stack": [
         "0x200"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1473,7 +1585,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1485,7 +1598,8 @@
     "expect": {
       "stack": [
         "0x2"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1497,7 +1611,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1516,7 +1631,8 @@
           "data": "aa",
           "topics": []
         }
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1537,7 +1653,8 @@
             "0x1111111111111111111111111111111111111111111111111111111111111111"
           ]
         }
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1559,7 +1676,8 @@
             "0x1111111111111111111111111111111111111111111111111111111111111111"
           ]
         }
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1582,7 +1700,8 @@
             "0x1111111111111111111111111111111111111111111111111111111111111111"
           ]
         }
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1606,7 +1725,8 @@
             "0x1111111111111111111111111111111111111111111111111111111111111111"
           ]
         }
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1649,7 +1769,8 @@
       "stack": [
         "0x42",
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1673,7 +1794,8 @@
       "stack": [
         "0x1000000000000000000000000000000000000aaa",
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1694,7 +1816,8 @@
       "stack": [
         "0x42",
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1706,7 +1829,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1726,7 +1850,8 @@
     "expect": {
       "stack": [
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1746,7 +1871,8 @@
     "expect": {
       "stack": [
         "0x4200000000000000000000000000000000000000000000000000000000000000"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1770,7 +1896,8 @@
       "stack": [
         "0x1000000000000000000000000000000000000aaa",
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1791,7 +1918,8 @@
       "stack": [
         "0x42",
         "0x1"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1811,7 +1939,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1826,7 +1955,8 @@
     "expect": {
       "stack": [
         "0x9"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1841,7 +1971,8 @@
     "expect": {
       "stack": [
         "0xffffffff00000000000000000000000000000000000000000000000000000000"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1856,7 +1987,8 @@
     "expect": {
       "stack": [
         "0x0"
-      ]
+      ],
+      "success": true
     }
   },
   {
@@ -1878,7 +2010,8 @@
       "stack": [
         "0x0",
         "0x7"
-      ]
+      ],
+      "success": true
     }
   }
 ]

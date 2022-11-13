@@ -9,6 +9,7 @@ for (const t of tests as any) {
     // and return more data (e.g. state, logs, etc.)
     const result = evm(hexStringToUint8Array(t.code.bin));
 
+    expect(result.success).toEqual(t.expect.success);
     expect(result.stack).toEqual(t.expect.stack.map((item) => BigInt(item)));
   });
 }

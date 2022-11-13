@@ -37,7 +37,12 @@ function main() {
     return value;
   });
 
-  const ordered = Object.entries(tests).map(([name, t]) => ({ name, ...t }));
+  const ordered = Object.entries(tests)
+    .map(([name, t]) => ({ name, ...t }))
+    .map((t) => ({
+      ...t,
+      expect: { ...t.expect, success: typeof t.expect.success === 'boolean' ? t.expect.success : true },
+    }));
 
   Object.keys(assembler.opcodes).forEach((name) => {
     if (!seenOpcodes.has(name) && ['PUSH', 'SWAP', 'DUP'].every((prefix) => !name.startsWith(prefix))) {

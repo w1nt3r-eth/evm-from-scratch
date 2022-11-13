@@ -14,7 +14,7 @@
 function evm(code) {
   // TODO: Implement me
 
-  return { stack: [] };
+  return { success: true, stack: [] };
 }
 
 function tests() {
@@ -33,6 +33,12 @@ function tests() {
         // Note: as the test cases get more complex, you'll need to modify this
         // to pass down more arguments to the evm function
         const result = evm(hexStringToUint8Array(t.code.bin));
+
+        if (result.success !== t.expect.success) {
+          throw new Error(
+            `Expected success=${t.expect.success}, got success=${result.success}`
+          );
+        }
 
         const expectedStackHex = t.expect.stack;
         const actualStackHex = result.stack.map((v) => "0x" + v.toString(16));

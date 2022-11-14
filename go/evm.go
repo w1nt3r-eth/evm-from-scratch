@@ -39,12 +39,21 @@ type TestCase struct {
 	Expect expect
 }
 
-func evm(code []byte) []big.Int {
+func evm(code []byte) (bool, []big.Int) {
 	var stack []big.Int
+	pc := 0
 
-	// TODO: Implement the EVM here!
+	for pc < len(code) {
+		op := code[pc]
+		pc++
+		
+		if op == 0x00 {
+		}
+		// TODO: Implement the EVM here!
+	}
 
-	return stack
+
+	return true, stack
 }
 
 func main() {
@@ -79,7 +88,7 @@ func main() {
 		// Note: as the test cases get more complex, you'll need to modify this
 		// to pass down more arguments to the evm function and return more than
 		// just the stack.
-		stack := evm(bin)
+		success, stack := evm(bin)
 
 		match := len(stack) == len(expectedStack)
 		if match {
@@ -87,11 +96,12 @@ func main() {
 				match = match && (s.Cmp(&expectedStack[i]) == 0)
 			}
 		}
+		match = match && (success == test.Expect.Success)
 
 		if !match {
 			fmt.Printf("Instructions: \n%v\n", test.Code.Asm)
-			fmt.Printf("Expected: %v\n", toStrings(expectedStack))
-			fmt.Printf("Got: %v\n\n", toStrings(stack))
+			fmt.Printf("Expected: success=%v, stack=%v\n", test.Expect.Success, toStrings(expectedStack))
+			fmt.Printf("Got:      success=%v, stack=%v\n\n", success, toStrings(stack))
 			fmt.Printf("Hint: %v\n\n", test.Hint)
 			fmt.Printf("Progress: %v/%v\n\n", index, len(payload))
 			log.Fatal("Stack mismatch")

@@ -14,10 +14,16 @@ import json
 import os
 
 def evm(code):
+    pc = 0
     success = True
     stack = []
 
-    # TODO: implement the EVM here!
+    while pc < len(code):
+        op = code[pc]
+        pc += 1
+
+        # TODO: implement the EVM here!
+        
 
     return (success, stack)
 
@@ -49,6 +55,8 @@ def test():
                 print("")
                 print("Test code:")
                 print(test['code']['asm'])
+                print("")
+                print("Hint:", test['hint'])
                 print("")
                 print(f"Progress: {i}/{len(data)}")
                 print("")

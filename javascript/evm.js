@@ -12,9 +12,17 @@
  */
 
 function evm(code) {
-  // TODO: Implement me
+  let pc = 0;
+  let stack = [];
 
-  return { success: true, stack: [] };
+  while (pc < code.length) {
+    const opcode = code[pc];
+    pc++;
+
+    // TODO: implement the EVM here!
+  }
+
+  return { success: true, stack };
 }
 
 function tests() {

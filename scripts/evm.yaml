@@ -13,6 +13,48 @@ PUSH:
   expect:
     stack: [1n]
 
+PUSH2:
+  hint: "PUSH2 reads the next 2 bytes, don't forget to properly increment PC"
+  code:
+    - PUSH2 0x1122
+  expect:
+    stack: [0x1122n]
+
+PUSH4:
+  hint: 'PUSH2 reads the next 4 bytes'
+  code:
+    - PUSH4 0x112233
+  expect:
+    stack: [0x112233n]
+
+PUSH6:
+  hint: 'PUSH6 reads the next 6 bytes. Can you implement all PUSH1...PUSH32 using the same code?'
+  code:
+    - PUSH6 0x112233445566
+  expect:
+    stack: [0x112233445566n]
+
+PUSH10:
+  hint: 'SIZE = OPCODE - PUSH1 + 1, then transform take the next SIZE bytes, PC += SIZE'
+  code:
+    - PUSH10 0x112233445566778899aa
+  expect:
+    stack: [0x112233445566778899aan]
+
+PUSH11:
+  hint: 'SIZE = OPCODE - PUSH1 + 1, program.slice(pc + 1, pc + 1 + size)'
+  code:
+    - PUSH11 0x112233445566778899aabb
+  expect:
+    stack: [0x112233445566778899aabbn]
+
+PUSH32:
+  hint: 'PUSH32 reads the next 32 bytes (256 bits)'
+  code:
+    - PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  expect:
+    stack: [0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn]
+
 PUSH (twice):
   hint: 'Note the order of items on the stack. The tests expect the top of the stack to be the first element'
   code:

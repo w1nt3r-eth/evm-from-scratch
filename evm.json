@@ -26,6 +26,90 @@
     }
   },
   {
+    "name": "PUSH2",
+    "hint": "PUSH2 reads the next 2 bytes, don't forget to properly increment PC",
+    "code": {
+      "asm": "PUSH2 0x1122",
+      "bin": "611122"
+    },
+    "expect": {
+      "stack": [
+        "0x1122"
+      ],
+      "success": true
+    }
+  },
+  {
+    "name": "PUSH4",
+    "hint": "PUSH2 reads the next 4 bytes",
+    "code": {
+      "asm": "PUSH4 0x112233",
+      "bin": "6300112233"
+    },
+    "expect": {
+      "stack": [
+        "0x112233"
+      ],
+      "success": true
+    }
+  },
+  {
+    "name": "PUSH6",
+    "hint": "PUSH6 reads the next 6 bytes. Can you implement all PUSH1...PUSH32 using the same code?",
+    "code": {
+      "asm": "PUSH6 0x112233445566",
+      "bin": "65112233445566"
+    },
+    "expect": {
+      "stack": [
+        "0x112233445566"
+      ],
+      "success": true
+    }
+  },
+  {
+    "name": "PUSH10",
+    "hint": "SIZE = OPCODE - PUSH1 + 1, then transform take the next SIZE bytes, PC += SIZE",
+    "code": {
+      "asm": "PUSH10 0x112233445566778899aa",
+      "bin": "69112233445566778899aa"
+    },
+    "expect": {
+      "stack": [
+        "0x112233445566778899aa"
+      ],
+      "success": true
+    }
+  },
+  {
+    "name": "PUSH11",
+    "hint": "SIZE = OPCODE - PUSH1 + 1, program.slice(pc + 1, pc + 1 + size)",
+    "code": {
+      "asm": "PUSH11 0x112233445566778899aabb",
+      "bin": "6a112233445566778899aabb"
+    },
+    "expect": {
+      "stack": [
+        "0x112233445566778899aabb"
+      ],
+      "success": true
+    }
+  },
+  {
+    "name": "PUSH32",
+    "hint": "PUSH32 reads the next 32 bytes (256 bits)",
+    "code": {
+      "asm": "PUSH32 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "bin": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    },
+    "expect": {
+      "stack": [
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ],
+      "success": true
+    }
+  },
+  {
     "name": "PUSH (twice)",
     "hint": "Note the order of items on the stack. The tests expect the top of the stack to be the first element",
     "code": {

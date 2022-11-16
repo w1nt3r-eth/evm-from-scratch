@@ -3,6 +3,7 @@
 // https://github.com/w1nt3r-eth/evm-from-scratch
 //
 // To work on EVM From Scratch In Go:
+//
 // - Install Golang: https://golang.org/doc/install
 // - Go to the `go` directory: `cd go`
 // - Edit `evm.go` (this file!), see TODO below

@@ -12,7 +12,12 @@
  * - Use Jest Watch Mode to run tests when files change: `yarn test --watchAll`
  */
 
-export default function evm(code: Uint8Array) {
+type Result = {
+  success: boolean,
+  stack: number[]
+}
+
+export default function evm(code: Uint8Array): Result {
   let pc = 0;
   let stack = [];
 

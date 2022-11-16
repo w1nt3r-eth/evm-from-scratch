@@ -14,7 +14,7 @@
 
 type Result = {
   success: boolean,
-  stack: number[]
+  stack: bigint[]
 }
 
 export default function evm(code: Uint8Array): Result {

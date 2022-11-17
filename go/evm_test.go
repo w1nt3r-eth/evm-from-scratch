@@ -3,8 +3,8 @@ package evm
 import (
 	"encoding/hex"
 	"encoding/json"
-	"io/ioutil"
 	"math/big"
+	"os"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -61,13 +61,14 @@ func TestEVM(t *testing.T) {
 	var tests []testCase
 	t.Run("setup", func(t *testing.T) {
 		const testSrc = "../evm.json"
-		buf, err := ioutil.ReadFile(testSrc)
+		f, err := os.Open(testSrc)
 		if err != nil {
-			fatalAndBugReport(t, "ioutil.ReadFile(%q) error %v", testSrc, err)
+			fatalAndBugReport(t, "os.Open(%q) error %v", testSrc, err)
 		}
+		defer f.Close()
 
-		if err := json.Unmarshal(buf, &tests); err != nil {
-			fatalAndBugReport(t, "json.Unmarshal([contents of %q], %T) error %v", testSrc, &tests, err)
+		if err := json.NewDecoder(f).Decode(&tests); err != nil {
+			fatalAndBugReport(t, "json.NewDecoder(%q).Decode(%T) error %v", testSrc, &tests, err)
 		}
 	})
 	if t.Failed() {

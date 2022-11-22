@@ -41,14 +41,14 @@
   },
   {
     "name": "PUSH4",
-    "hint": "PUSH2 reads the next 4 bytes",
+    "hint": "PUSH4 reads the next 4 bytes",
     "code": {
-      "asm": "PUSH4 0x112233",
-      "bin": "6300112233"
+      "asm": "PUSH4 0x11223344",
+      "bin": "6311223344"
     },
     "expect": {
       "stack": [
-        "0x112233"
+        "0x11223344"
       ],
       "success": true
     }

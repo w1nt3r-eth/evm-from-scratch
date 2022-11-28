@@ -15,7 +15,7 @@ import (
 )
 
 // Run runs the EVM code and returns the stack and a success indicator.
-func Run(code []byte) ([]*big.Int, bool) {
+func Evm(code []byte) ([]*big.Int, bool) {
 	var stack []*big.Int
 	pc := 0
 

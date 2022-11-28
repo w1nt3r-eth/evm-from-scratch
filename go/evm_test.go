@@ -57,6 +57,16 @@ func (w *want) StackInts() []*big.Int {
 	return b
 }
 
+// toHexStrings converts an array of *big.Ints into hex-formatted strings to match
+// the format of numbers used in evm.json
+func toHexStrings(ints []*big.Int) []string {
+	b := make([]string, len(ints))
+	for i, s := range ints {
+		b[i] = "0x" + s.Text(16)
+	}
+	return b
+}
+
 func TestEVM(t *testing.T) {
 	var tests []testCase
 	t.Run("setup", func(t *testing.T) {
@@ -86,11 +96,12 @@ func TestEVM(t *testing.T) {
 			if gotSuccess != tt.Want.Success {
 				t.Errorf("Run(…) got success = %t; want %t", gotSuccess, tt.Want.Success)
 			}
-			if diff := cmp.Diff(tt.Want.StackInts(), got, cmpopts.EquateEmpty()); diff != "" {
+			if diff := cmp.Diff(toHexStrings(tt.Want.StackInts()), toHexStrings(got), cmpopts.EquateEmpty()); diff != "" {
 				t.Errorf("Run(…) stack mismatch; diff (-want +got)\n%s", diff)
 			}
 
 			if t.Failed() {
+				t.Logf("✕  %v", tt.Name)
 				t.Logf("EVM Instructions:\n%v", tt.Code.Asm)
 				if tt.Hint != "" {
 					t.Log("#####")
@@ -101,6 +112,8 @@ func TestEVM(t *testing.T) {
 		})
 		if t.Failed() {
 			t.Fatalf("Progress: %d/%d", i, len(tests))
+		} else {
+			t.Logf("✓  %v", tt.Name)
 		}
 	}
 }

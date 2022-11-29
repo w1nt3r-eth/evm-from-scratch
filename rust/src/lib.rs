@@ -1,4 +1,13 @@
-use primitive_types::U256;
+use ethereum_types::U256;
+use serde::Deserialize;
+
+#[derive(Debug, Deserialize)]
+pub struct Code {
+    #[serde(default)]
+    pub asm: Option<String>,
+    #[serde(default)]
+    pub bin: String,
+}
 
 pub struct EvmResult {
     pub stack: Vec<U256>,
@@ -23,7 +32,7 @@ pub fn evm(_code: impl AsRef<[u8]>) -> EvmResult {
     // TODO: Implement me
 
     return EvmResult {
-        stack: stack,
+        stack,
         success: true,
     };
 }

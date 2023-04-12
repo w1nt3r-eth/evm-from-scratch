@@ -6,7 +6,14 @@ STOP:
     success: true
     stack: []
 
-PUSH:
+PUSH0:
+  hint: 'Read "Program Counter" section of the course learning materials for an example on how to parse the bytecode'
+  code:
+    - PUSH0
+  expect:
+    stack: [0n]
+
+PUSH1:
   hint: 'Read "Program Counter" section of the course learning materials for an example on how to parse the bytecode'
   code:
     - PUSH1 1

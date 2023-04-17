@@ -12,8 +12,9 @@
 
 import json
 import os
+from typing import Tuple, List
 
-def evm(code):
+def evm(code: bytes) -> Tuple[bool, List[str]]:
     pc = 0
     success = True
     stack = []
@@ -46,20 +47,16 @@ def test():
                 print(f"❌ Test #{i + 1}/{total} {test['name']}")
                 if stack != expected_stack:
                     print("Stack doesn't match")
-                    print(" expected:", expected_stack)
-                    print("   actual:", stack)
+                    print(f"\tExpected:\t{expected_stack}")
+                    print(f"\tActual:\t\t{stack}")
                 else:
                     print("Success doesn't match")
-                    print(" expected:", test['expect']['success'])
-                    print("   actual:", success)
-                print("")
-                print("Test code:")
+                    print(f"\tExpected:\t{test['expect']['success']}")
+                    print(f"\tActual:\t\t{success}")
+                print("\nTest code:")
                 print(test['code']['asm'])
-                print("")
-                print("Hint:", test['hint'])
-                print("")
-                print(f"Progress: {i}/{len(data)}")
-                print("")
+                print("\nHint:", test['hint'])
+                print(f"\nProgress: {i}/{len(data)}\n")
                 break
             else:
                 print(f"✓  Test #{i + 1}/{total} {test['name']}")

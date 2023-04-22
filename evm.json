@@ -238,7 +238,7 @@
   },
   {
     "name": "SUB (underflow)",
-    "hint": "Underflow works the same way as overflow, 3 - 2 wraps around and results in MAX_UINT256",
+    "hint": "Underflow works the same way as overflow, 2 - 3 wraps around and results in MAX_UINT256",
     "code": {
       "asm": "PUSH1 0x03\nPUSH1 0x02\nSUB",
       "bin": "6003600203"

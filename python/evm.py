@@ -29,7 +29,9 @@ def evm(code):
 
 def test():
     script_dirname = os.path.dirname(os.path.abspath(__file__))
-    json_file = os.path.join(script_dirname, "..", "evm.json")
+    json_file = os.path.join(script_dirname, "..", "evm-pro.json")
+    if not os.path.exists(json_file):
+        json_file = os.path.join(script_dirname, "..", "evm.json")
     with open(json_file) as f:
         data = json.load(f)
         total = len(data)

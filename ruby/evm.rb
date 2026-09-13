@@ -38,7 +38,8 @@ class EVMTest
     attr_reader :data
 
     def initialize
-        json_file = '../evm.json'
+        json_file = File.expand_path('../evm-pro.json', __dir__)
+        json_file = File.expand_path('../evm.json', __dir__) unless File.exist?(json_file)
         file = File.read(json_file)
 
         @data = JSON.parse(file)

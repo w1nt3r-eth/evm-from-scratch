@@ -4,10 +4,17 @@ const path = require('path');
 const yaml = require('yaml');
 
 function main() {
+  generate('evm');
+  if (fs.existsSync(path.join(__dirname, 'evm-pro.yaml'))) {
+    generate('evm-pro');
+  }
+}
+
+function generate(name) {
   const seenOpcodes = new Set();
   const lookAtOpcodes = (code) => code.forEach((line) => seenOpcodes.add(line.match(/^(\w+).*/)[1].toUpperCase()));
 
-  const content = fs.readFileSync(path.join(__dirname, 'evm.yaml'), 'utf8');
+  const content = fs.readFileSync(path.join(__dirname, `${name}.yaml`), 'utf8');
   const tests = yaml.parse(content, (key, value) => {
     // Compile assembly code to bytecode, keeping the original source code
     if (key === 'code') {
@@ -51,7 +58,7 @@ function main() {
     }
   });
 
-  fs.writeFileSync(path.join(__dirname, '..', 'evm.json'), JSON.stringify(ordered, null, 2));
+  fs.writeFileSync(path.join(__dirname, '..', `${name}.json`), JSON.stringify(ordered, null, 2));
 }
 
 function parseYamlBigInt(value) {

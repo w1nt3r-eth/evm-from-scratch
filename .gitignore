@@ -1,2 +1,4 @@
 .DS_Store
 rust/target
+evm-pro.json
+evm-pro.yaml

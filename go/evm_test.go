@@ -70,7 +70,10 @@ func toHexStrings(ints []*big.Int) []string {
 func TestEVM(t *testing.T) {
 	var tests []testCase
 	t.Run("setup", func(t *testing.T) {
-		const testSrc = "../evm.json"
+		testSrc := "../evm-pro.json"
+		if _, err := os.Stat(testSrc); os.IsNotExist(err) {
+			testSrc = "../evm.json"
+		}
 		f, err := os.Open(testSrc)
 		if err != nil {
 			fatalAndBugReport(t, "os.Open(%q) error %v", testSrc, err)

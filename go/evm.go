@@ -7,7 +7,7 @@
 // - Install Golang: https://golang.org/doc/install
 // - Go to the `go` directory: `cd go`
 // - Edit `evm.go` (this file!), see TODO below
-// - Run `go test ./...` to run the tests
+// - Run `go test -count=1 ./...` to run the tests without caching the JSON suite
 package evm
 
 import (

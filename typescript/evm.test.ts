@@ -1,6 +1,11 @@
 import { expect, test } from "@jest/globals";
 import evm from "./evm";
-import tests from "../evm.json";
+import { existsSync, readFileSync } from "fs";
+import path from "path";
+
+const proFile = path.join(__dirname, "../evm-pro.json");
+const testFile = existsSync(proFile) ? proFile : path.join(__dirname, "../evm.json");
+const tests = JSON.parse(readFileSync(testFile, "utf8"));
 
 for (const t of tests as any) {
   test(t.name, () => {

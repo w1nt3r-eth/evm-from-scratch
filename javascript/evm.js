@@ -26,7 +26,10 @@ function evm(code) {
 }
 
 function tests() {
-  const tests = require("../evm.json");
+  const fs = require("fs");
+  const path = require("path");
+  const proFile = path.join(__dirname, "../evm-pro.json");
+  const tests = require(fs.existsSync(proFile) ? proFile : "../evm.json");
 
   const hexStringToUint8Array = (hexString) =>
     new Uint8Array(hexString.match(/../g).map((byte) => parseInt(byte, 16)));

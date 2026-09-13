@@ -41,7 +41,10 @@ struct Expect {
 
 
 fn main() {
-    let text = std::fs::read_to_string("../evm.json").unwrap();
+    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("..");
+    let pro_file = root.join("evm-pro.json");
+    let test_file = if pro_file.exists() { pro_file } else { root.join("evm.json") };
+    let text = std::fs::read_to_string(test_file).unwrap();
     let data: Vec<Evmtest> = serde_json::from_str(&text).unwrap();
 
     let total = data.len();

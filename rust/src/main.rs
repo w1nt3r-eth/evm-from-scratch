@@ -33,7 +33,11 @@ struct Code {
 #[derive(Debug, Deserialize)]
 struct Expect {
     stack: Option<Vec<String>>,
-    success: bool,
+    success: Option<bool>,
+    #[serde(rename = "return")]
+    return_data: Option<String>,
+    logs: Option<Vec<serde_json::Value>>,
+    state: Option<serde_json::Map<String, serde_json::Value>>,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -62,7 +66,32 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
 
         let stack_matches = test.expect.stack.is_none() || result.stack == expected_stack;
-        let matching = stack_matches && result.success == test.expect.success;
+        let mut matching = stack_matches
+            && test
+                .expect
+                .success
+                .is_none_or(|value| result.success == value);
+        if let Some(ref value) = test.expect.return_data {
+            if &result.return_data != value {
+                println!(
+                    "return mismatch: expected {value:?}, got {:?}",
+                    result.return_data
+                );
+                matching = false;
+            }
+        }
+        if let Some(ref value) = test.expect.logs {
+            if &result.logs != value {
+                println!("logs mismatch: expected {value:?}, got {:?}", result.logs);
+                matching = false;
+            }
+        }
+        if let Some(ref value) = test.expect.state {
+            if &result.state != value {
+                println!("state mismatch: expected {value:?}, got {:?}", result.state);
+                matching = false;
+            }
+        }
 
         if !matching {
             println!(

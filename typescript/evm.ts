@@ -12,9 +12,14 @@
  * - Optional type checking: `npm install` then `npm run typecheck`
  */
 
-type Result = {
+export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
+
+export type Result = {
   success: boolean;
   stack: bigint[];
+  return: string;
+  logs: Json[];
+  state: { [key: string]: Json };
 };
 
 export default function evm(code: Uint8Array): Result {
@@ -28,5 +33,5 @@ export default function evm(code: Uint8Array): Result {
     // TODO: implement the EVM here!
   }
 
-  return { success: true, stack };
+  return { success: true, stack, return: "", logs: [], state: {} };
 }

@@ -3,6 +3,9 @@ use primitive_types::U256;
 pub struct EvmResult {
     pub stack: Vec<U256>,
     pub success: bool,
+    pub return_data: String,
+    pub logs: Vec<serde_json::Value>,
+    pub state: serde_json::Map<String, serde_json::Value>,
 }
 
 pub fn evm(code: &[u8]) -> EvmResult {
@@ -19,5 +22,8 @@ pub fn evm(code: &[u8]) -> EvmResult {
     EvmResult {
         stack,
         success: true,
+        return_data: String::new(),
+        logs: Vec::new(),
+        state: serde_json::Map::new(),
     }
 }

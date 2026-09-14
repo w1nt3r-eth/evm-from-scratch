@@ -17,6 +17,9 @@ using nlohmann::json;
 struct Result {
     bool success;
     std::vector<uint256> stack;
+    std::string return_data;
+    json logs = json::array();
+    json state = json::object();
 };
 
 Result evm(const std::vector<uint8_t>& code) {
@@ -64,7 +67,7 @@ int main() {
         std::cout << "Test #" << i + 1 << '/' << tests.size() << ": " << test.at("name").get<std::string>() << '\n';
         const auto& code = test.at("code");
         const auto& expected = test.at("expect");
-        // As tests get more complex, pass more inputs to evm and check more outputs.
+        // As tests get more complex, pass more inputs to evm.
         const auto result = evm(decode_hex(code.at("bin").get<std::string>()));
         std::vector<uint256> expected_stack;
         const bool check_stack = expected.contains("stack") && !expected.at("stack").is_null();
@@ -73,9 +76,18 @@ int main() {
                 expected_stack.push_back(intx::from_string<uint256>(value.get<std::string>()));
             }
         }
-        const bool expected_success = expected.at("success");
+        const bool check_success = expected.contains("success") && !expected.at("success").is_null();
+        const bool expected_success = check_success ? expected.at("success").get<bool>() : result.success;
+        const json outputs = {{"return", result.return_data}, {"logs", result.logs}, {"state", result.state}};
+        bool outputs_match = true;
+        for (const auto& [field, actual] : outputs.items()) {
+            if (expected.contains(field) && !expected.at(field).is_null() && expected.at(field) != actual) {
+                std::cout << field << " mismatch: expected " << expected.at(field) << "; got " << actual << '\n';
+                outputs_match = false;
+            }
+        }
 
-        if (result.success != expected_success || (check_stack && result.stack != expected_stack)) {
+        if (!outputs_match || result.success != expected_success || (check_stack && result.stack != expected_stack)) {
             std::cout << std::boolalpha << "Expected success: " << expected_success << "; got: " << result.success << '\n';
             std::cout << "Expected stack: "; print_stack(expected_stack);
             std::cout << "Actual stack: "; print_stack(result.stack);

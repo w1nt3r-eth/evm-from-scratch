@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"math/big"
 	"os"
+	"reflect"
 	"slices"
 	"testing"
 )
@@ -22,9 +23,11 @@ type code struct {
 }
 
 type want struct {
-	Stack   []string `json:"stack"`
-	Success bool     `json:"success"`
-	Return  string   `json:"return"`
+	Stack   []string         `json:"stack"`
+	Success *bool            `json:"success"`
+	Return  *string          `json:"return"`
+	Logs    []map[string]any `json:"logs"`
+	State   map[string]any   `json:"state"`
 }
 
 func TestEVM(t *testing.T) {
@@ -55,9 +58,9 @@ func TestEVM(t *testing.T) {
 				fatalAndBugReport(t, "hex.DecodeString(%q) error %v", tt.Code.Bin, err)
 			}
 
-			got, gotSuccess := Evm(bin)
-			if gotSuccess != tt.Want.Success {
-				t.Errorf("Evm(…) got success = %t; want %t", gotSuccess, tt.Want.Success)
+			got := Evm(bin)
+			if tt.Want.Success != nil && got.Success != *tt.Want.Success {
+				t.Errorf("Evm(…) got success = %t; want %t", got.Success, *tt.Want.Success)
 			}
 			if tt.Want.Stack != nil {
 				wantStack := make([]*big.Int, len(tt.Want.Stack))
@@ -68,11 +71,21 @@ func TestEVM(t *testing.T) {
 					}
 					wantStack[i] = n
 				}
-				if !slices.EqualFunc(wantStack, got, func(want, got *big.Int) bool {
+				if !slices.EqualFunc(wantStack, got.Stack, func(want, got *big.Int) bool {
 					return got != nil && want.Cmp(got) == 0
 				}) {
-					t.Errorf("Evm(…) stack mismatch; want %v, got %v", wantStack, got)
+					t.Errorf("Evm(…) stack mismatch; want %v, got %v", wantStack, got.Stack)
 				}
+			}
+
+			if tt.Want.Return != nil && got.Return != *tt.Want.Return {
+				t.Errorf("return mismatch; want %q, got %q", *tt.Want.Return, got.Return)
+			}
+			if tt.Want.Logs != nil {
+				checkJSON(t, "logs", got.Logs, tt.Want.Logs)
+			}
+			if tt.Want.State != nil {
+				checkJSON(t, "state", got.State, tt.Want.State)
 			}
 
 			if t.Failed() {
@@ -94,6 +107,25 @@ func TestEVM(t *testing.T) {
 		} else {
 			t.Logf("✓  %v", tt.Name)
 		}
+	}
+}
+
+func checkJSON(t *testing.T, field string, got, want any) {
+	t.Helper()
+	normalize := func(value any) any {
+		t.Helper()
+		data, err := json.Marshal(value)
+		if err != nil {
+			t.Fatalf("%s: cannot encode value: %v", field, err)
+		}
+		var normalized any
+		if err := json.Unmarshal(data, &normalized); err != nil {
+			t.Fatalf("%s: cannot decode value: %v", field, err)
+		}
+		return normalized
+	}
+	if !reflect.DeepEqual(normalize(got), normalize(want)) {
+		t.Errorf("%s mismatch; want %v, got %v", field, want, got)
 	}
 }
 

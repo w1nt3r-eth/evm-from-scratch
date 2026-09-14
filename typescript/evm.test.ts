@@ -1,12 +1,18 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
-import evm from "./evm.ts";
+import evm, { type Json, type Result } from "./evm.ts";
 
 type TestCase = {
   name: string;
   hint: string;
   code: { bin: string; asm: string | null };
-  expect: { success: boolean; stack?: string[] };
+  expect: {
+    success?: boolean | null;
+    stack?: string[] | null;
+    return?: string | null;
+    logs?: Json[] | null;
+    state?: { [key: string]: Json } | null;
+  };
 };
 
 const proFile = new URL("../evm-pro.json", import.meta.url);
@@ -17,11 +23,12 @@ let passed = 0;
 for (const t of tests) {
   console.log(`Test #${passed + 1}/${tests.length}: ${t.name}`);
   try {
-    // As the tests get more complex, pass more inputs to evm and check more outputs.
+    // As the tests get more complex, pass more inputs to evm.
     const result = evm(Buffer.from(t.code.bin, "hex"));
-    assert.equal(result.success, t.expect.success, "Success mismatch");
-    if (t.expect.stack != null) {
-      assert.deepEqual(result.stack, t.expect.stack.map(BigInt), "Stack mismatch");
+    for (const [field, expected] of Object.entries(t.expect)) {
+      if (expected == null) continue;
+      const value = field === "stack" ? t.expect.stack!.map(BigInt) : expected;
+      assert.deepEqual(result[field as keyof Result], value, `${field} mismatch`);
     }
     passed++;
   } catch (error) {

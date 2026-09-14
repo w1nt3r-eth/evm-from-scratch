@@ -26,7 +26,7 @@ function evm(code) {
     // TODO: implement the EVM here!
   }
 
-  return { success: true, stack };
+  return { success: true, stack, return: "", logs: [], state: {} };
 }
 
 function tests() {
@@ -38,11 +38,12 @@ function tests() {
   for (const t of tests) {
     console.log(`Test #${passed + 1}/${tests.length}: ${t.name}`);
     try {
-      // As the tests get more complex, pass more inputs to evm and check more outputs.
+      // As the tests get more complex, pass more inputs to evm.
       const result = evm(Buffer.from(t.code.bin, "hex"));
-      assert.equal(result.success, t.expect.success, "Success mismatch");
-      if (t.expect.stack != null) {
-        assert.deepEqual(result.stack, t.expect.stack.map(BigInt), "Stack mismatch");
+      for (const [field, expected] of Object.entries(t.expect)) {
+        if (expected == null) continue;
+        const value = field === "stack" ? expected.map(BigInt) : expected;
+        assert.deepEqual(result[field], value, `${field} mismatch`);
       }
       passed++;
     } catch (error) {

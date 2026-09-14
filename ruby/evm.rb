@@ -30,7 +30,7 @@ class EVM
 
     end
 
-    { success: success, stack: stack }
+    { success: success, stack: stack, return: '', logs: [], state: {} }
   end
 end
 
@@ -60,20 +60,18 @@ class EVMTest
 
       result = evm.run
 
-      expected_stack = test['expect']['stack']&.map { |value| value.hex }
+      mismatches = test['expect'].map do |field, expected|
+        next if expected.nil?
+        expected = expected.map { |value| value.hex } if field == 'stack'
+        actual = result[field.to_sym]
+        [field, expected, actual] unless actual == expected
+      end.compact
 
-      stack_matches = expected_stack.nil? || result[:stack] == expected_stack
-
-      if !stack_matches || result[:success] != test['expect']['success']
+      unless mismatches.empty?
         puts "❌ Test #{i + 1}/#{total} #{test['name']}"
-        unless stack_matches
-          puts "Stack doesn't match"
-          puts " expected:", expected_stack
-          puts "   actual:", result[:stack]
-        else
-          puts "Success doesn't match"
-          puts " expected:", test['expect']['success']
-          puts "   actual:", result[:success]
+        mismatches.each do |field, expected, actual|
+          puts "#{field} doesn't match"
+          p expected: expected, actual: actual
         end
         puts ""
         puts "Test code:"

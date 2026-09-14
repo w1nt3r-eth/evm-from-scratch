@@ -14,8 +14,15 @@ import (
 	"math/big"
 )
 
-// Run runs the EVM code and returns the stack and a success indicator.
-func Evm(code []byte) ([]*big.Int, bool) {
+type Result struct {
+	Success bool
+	Stack   []*big.Int
+	Return  string
+	Logs    []map[string]any
+	State   map[string]any
+}
+
+func Evm(code []byte) Result {
 	var stack []*big.Int
 	pc := 0
 
@@ -27,5 +34,5 @@ func Evm(code []byte) ([]*big.Int, bool) {
 		_ = op // delete this; it's only here to make the compiler think you're already using `op`
 	}
 
-	return stack, true
+	return Result{Success: true, Stack: stack, Logs: []map[string]any{}, State: map[string]any{}}
 }

@@ -2,7 +2,30 @@
 import BigInt
 import Foundation
 
-func evm(_ code: [UInt8]) -> (success: Bool, stack: [BigUInt]) {
+enum JSONValue: Decodable, Equatable {
+    case null, bool(Bool), number(Double), string(String)
+    case array([JSONValue]), object([String: JSONValue])
+
+    init(from decoder: Decoder) throws {
+        let value = try decoder.singleValueContainer()
+        if value.decodeNil() { self = .null }
+        else if let bool = try? value.decode(Bool.self) { self = .bool(bool) }
+        else if let string = try? value.decode(String.self) { self = .string(string) }
+        else if let number = try? value.decode(Double.self) { self = .number(number) }
+        else if let array = try? value.decode([JSONValue].self) { self = .array(array) }
+        else { self = .object(try value.decode([String: JSONValue].self)) }
+    }
+}
+
+struct Result {
+    var success: Bool
+    var stack: [BigUInt]
+    var returnData = ""
+    var logs: [JSONValue] = []
+    var state: [String: JSONValue] = [:]
+}
+
+func evm(_ code: [UInt8]) -> Result {
     var pc = 0
     let stack: [BigUInt] = []
 
@@ -14,7 +37,7 @@ func evm(_ code: [UInt8]) -> (success: Bool, stack: [BigUInt]) {
         // TODO: implement the EVM here!
     }
 
-    return (true, stack)
+    return Result(success: true, stack: stack)
 }
 
 struct TestCase: Decodable {
@@ -28,8 +51,11 @@ struct TestCase: Decodable {
         let asm: String?
     }
     struct Expected: Decodable {
-        let success: Bool
+        let success: Bool?
         let stack: [String]?
+        let `return`: String?
+        let logs: [JSONValue]?
+        let state: [String: JSONValue]?
     }
 }
 
@@ -71,13 +97,27 @@ do {
 do {
     for (index, test) in tests.enumerated() {
         print("Test #\(index + 1)/\(tests.count): \(test.name)")
-        // As tests get more complex, pass more inputs to evm and check more outputs.
+        // As tests get more complex, pass more inputs to evm.
         let result = evm(try decodeHex(test.code.bin))
         let expectedStack = try test.expect.stack?.map(parseInteger)
 
         let stackMatches = expectedStack.map { $0 == result.stack } ?? true
-        if result.success != test.expect.success || !stackMatches {
-            print("Expected success: \(test.expect.success); got: \(result.success)")
+        let successMatches = test.expect.success.map { $0 == result.success } ?? true
+        var outputsMatch = true
+        if let expected = test.expect.return, expected != result.returnData {
+            print("return mismatch: expected \(expected); got \(result.returnData)")
+            outputsMatch = false
+        }
+        if let expected = test.expect.logs, expected != result.logs {
+            print("logs mismatch: expected \(expected); got \(result.logs)")
+            outputsMatch = false
+        }
+        if let expected = test.expect.state, expected != result.state {
+            print("state mismatch: expected \(expected); got \(result.state)")
+            outputsMatch = false
+        }
+        if !successMatches || !stackMatches || !outputsMatch {
+            print("Expected success: \(String(describing: test.expect.success)); got: \(result.success)")
             if let expectedStack { print("Expected stack: \(expectedStack)") }
             print("Actual stack: \(result.stack)")
             print("Instructions:\n\(test.code.asm ?? test.code.bin)")

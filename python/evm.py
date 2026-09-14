@@ -14,7 +14,7 @@ import json
 from pathlib import Path
 
 
-def evm(code: bytes) -> tuple[bool, list[int]]:
+def evm(code: bytes) -> dict:
     pc = 0
     success = True
     stack: list[int] = []
@@ -25,7 +25,7 @@ def evm(code: bytes) -> tuple[bool, list[int]]:
 
         # TODO: implement the EVM here!
 
-    return success, stack
+    return {"success": success, "stack": stack, "return": "", "logs": [], "state": {}}
 
 
 def test():
@@ -41,23 +41,22 @@ def test():
         # Note: as the test cases get more complex, you'll need to modify this
         # to pass down more arguments to the evm function
         code = bytes.fromhex(test['code']['bin'])
-        success, stack = evm(code)
+        result = evm(code)
+        mismatches = []
+        for field, expected in test['expect'].items():
+            if expected is None:
+                continue
+            if field == 'stack':
+                expected = [int(x, 16) for x in expected]
+            if result.get(field) != expected:
+                mismatches.append((field, expected, result.get(field)))
 
-        expected_stack = test['expect'].get('stack')
-        if expected_stack is not None:
-            expected_stack = [int(x, 16) for x in expected_stack]
-        stack_matches = expected_stack is None or stack == expected_stack
-
-        if not stack_matches or success != test['expect']['success']:
+        if mismatches:
             print(f"❌ Test #{i + 1}/{total} {test['name']}")
-            if not stack_matches:
-                print("Stack doesn't match")
-                print(" expected:", expected_stack)
-                print("   actual:", stack)
-            else:
-                print("Success doesn't match")
-                print(" expected:", test['expect']['success'])
-                print("   actual:", success)
+            for field, expected, actual in mismatches:
+                print(f"{field} doesn't match")
+                print(" expected:", expected)
+                print("   actual:", actual)
             print("")
             print("Test code:")
             print(test['code']['asm'] or test['code']['bin'])

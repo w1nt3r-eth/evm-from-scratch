@@ -17,7 +17,7 @@ use primitive_types::U256;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-struct Evmtest {
+struct TestCase {
     name: String,
     hint: String,
     code: Code,
@@ -36,32 +36,33 @@ struct Expect {
     success: bool,
 }
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let test_file = if std::path::Path::new("../evm-pro.json").exists() {
         "../evm-pro.json"
     } else {
         "../evm.json"
     };
-    let text = std::fs::read_to_string(test_file).unwrap();
-    let data: Vec<Evmtest> = serde_json::from_str(&text).unwrap();
+    let text = std::fs::read_to_string(test_file)?;
+    let data: Vec<TestCase> = serde_json::from_str(&text)?;
 
     let total = data.len();
 
     for (index, test) in data.iter().enumerate() {
         println!("Test {} of {}: {}", index + 1, total, test.name);
 
-        let code: Vec<u8> = hex::decode(&test.code.bin).unwrap();
+        let code: Vec<u8> = hex::decode(&test.code.bin)?;
 
         let result = evm(&code);
 
         let mut expected_stack: Vec<U256> = Vec::new();
         if let Some(ref stacks) = test.expect.stack {
             for value in stacks {
-                expected_stack.push(U256::from_str_radix(value, 16).unwrap());
+                expected_stack.push(U256::from_str_radix(value, 16)?);
             }
         }
 
-        let matching = result.stack == expected_stack && result.success == test.expect.success;
+        let stack_matches = test.expect.stack.is_none() || result.stack == expected_stack;
+        let matching = stack_matches && result.success == test.expect.success;
 
         if !matching {
             println!(
@@ -90,4 +91,5 @@ fn main() {
         println!("PASS");
     }
     println!("Congratulations!");
+    Ok(())
 }

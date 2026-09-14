@@ -2,3 +2,10 @@
 rust/target
 evm-pro.json
 evm-pro.yaml
+java/.deps/
+zig/.zig-cache/
+zig/zig-out/
+cpp/.deps/
+cpp/evm
+swift/.build/
+swift/.swiftpm/

@@ -22,47 +22,9 @@ type code struct {
 }
 
 type want struct {
-	Stack   []hexBigInt `json:"stack"`
-	Success bool        `json:"success"`
-	Return  string      `json:"return"`
-}
-
-// A hexBigInt is a *big.Int that can be read from a JSON hex string.
-type hexBigInt struct {
-	*big.Int
-}
-
-// UnmarshalJSON unmarshals the buffer into i.Int; it expects the input to be
-// string-quoted.
-func (i *hexBigInt) UnmarshalJSON(b []byte) error {
-	var s string
-	if err := json.Unmarshal(b, &s); err != nil {
-		return err
-	}
-	if i.Int == nil {
-		i.Int = new(big.Int)
-	}
-	return i.Int.UnmarshalJSON([]byte(s))
-}
-
-// StackInts returns the underlying *big.Int values of w.Stack, unwrapping them
-// from within the JSON-unmarshalling helper.
-func (w *want) StackInts() []*big.Int {
-	b := make([]*big.Int, len(w.Stack))
-	for i, s := range w.Stack {
-		b[i] = s.Int
-	}
-	return b
-}
-
-// toHexStrings converts an array of *big.Ints into hex-formatted strings to match
-// the format of numbers used in evm.json
-func toHexStrings(ints []*big.Int) []string {
-	b := make([]string, len(ints))
-	for i, s := range ints {
-		b[i] = "0x" + s.Text(16)
-	}
-	return b
+	Stack   []string `json:"stack"`
+	Success bool     `json:"success"`
+	Return  string   `json:"return"`
 }
 
 func TestEVM(t *testing.T) {
@@ -97,8 +59,20 @@ func TestEVM(t *testing.T) {
 			if gotSuccess != tt.Want.Success {
 				t.Errorf("Evm(…) got success = %t; want %t", gotSuccess, tt.Want.Success)
 			}
-			if wantStack, gotStack := toHexStrings(tt.Want.StackInts()), toHexStrings(got); !slices.Equal(wantStack, gotStack) {
-				t.Errorf("Evm(…) stack mismatch; want %v, got %v", wantStack, gotStack)
+			if tt.Want.Stack != nil {
+				wantStack := make([]*big.Int, len(tt.Want.Stack))
+				for i, value := range tt.Want.Stack {
+					n, ok := new(big.Int).SetString(value, 0)
+					if !ok {
+						fatalAndBugReport(t, "Invalid stack integer %q", value)
+					}
+					wantStack[i] = n
+				}
+				if !slices.EqualFunc(wantStack, got, func(want, got *big.Int) bool {
+					return got != nil && want.Cmp(got) == 0
+				}) {
+					t.Errorf("Evm(…) stack mismatch; want %v, got %v", wantStack, got)
+				}
 			}
 
 			if t.Failed() {

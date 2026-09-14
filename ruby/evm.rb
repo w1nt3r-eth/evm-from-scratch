@@ -11,82 +11,84 @@
 require 'json'
 
 class EVM
-    attr_reader :code
+  attr_reader :code
 
-    def initialize(code)
-        @code = code
+  def initialize(code)
+    @code = code
+  end
+
+  def run
+    pc = 0
+    success = true
+    stack = []
+
+    while pc < code.length
+      op = code[pc]
+      pc += 1
+
+      # TODO: implement the EVM here!
+
     end
 
-    def run
-        pc = 0
-        success = true
-        stack = []
-
-        while pc < code.length
-            op = code[pc]
-            pc += 1
-
-            # TODO: implement the EVM here!
-
-        end
-
-        { success: success, stack: stack }
-    end
+    { success: success, stack: stack }
+  end
 end
 
 class EVMTest
-    attr_reader :data
+  attr_reader :data
 
-    def initialize
-        json_file = File.expand_path('../evm-pro.json', __dir__)
-        json_file = File.expand_path('../evm.json', __dir__) unless File.exist?(json_file)
-        file = File.read(json_file)
+  def initialize
+    json_file = File.expand_path('../evm-pro.json', __dir__)
+    json_file = File.expand_path('../evm.json', __dir__) unless File.exist?(json_file)
+    file = File.read(json_file)
 
-        @data = JSON.parse(file)
-    end
+    @data = JSON.parse(file)
+  end
 
-    def total
-        data.length
-    end
+  def total
+    data.length
+  end
 
-    def run
-        data.each_with_index do |test, i|
-            hex_code = test['code']['bin']
-            code = hex_code.scan(/../).map(&:hex)
+  def run
+    data.each_with_index do |test, i|
+      hex_code = test['code']['bin']
+      code = hex_code.scan(/../).map(&:hex)
 
-            # Note: as the test cases get more complex, you'll need to modify this
-            # to pass down more arguments to the evm class
-            evm = EVM.new(code)
+      # Note: as the test cases get more complex, you'll need to modify this
+      # to pass down more arguments to the evm class
+      evm = EVM.new(code)
 
-            result = evm.run
+      result = evm.run
 
-            expected_stack = test['expect']['stack'] && test['expect']['stack'].map {|value| value.hex }
+      expected_stack = test['expect']['stack']&.map { |value| value.hex }
 
-            if result[:stack] != expected_stack or result[:success] != test['expect']['success']
-                puts "❌ Test #{i + 1}/#{total} #{test['name']}"
-                if result[:stack] != expected_stack
-                    puts "Stack doesn't match"
-                    puts " expected:", expected_stack
-                    puts "   actual:", result[:stack]
-                else
-                    puts "Success doesn't match"
-                    puts " expected:", test['expect']['success']
-                    puts "   actual:", result[:success]
-                end
-                puts ""
-                puts "Test code:"
-                puts test['code']['asm'] || test['code']['bin']
-                puts ""
-                puts "Hint:", test['hint']
-                puts ""
-                puts "Progress: #{i}/#{total}"
-                puts ""
-                exit 1
-            else
-                puts "✓  Test #{i + 1}/#{total} #{test['name']}"
-            end
+      stack_matches = expected_stack.nil? || result[:stack] == expected_stack
+
+      if !stack_matches || result[:success] != test['expect']['success']
+        puts "❌ Test #{i + 1}/#{total} #{test['name']}"
+        unless stack_matches
+          puts "Stack doesn't match"
+          puts " expected:", expected_stack
+          puts "   actual:", result[:stack]
+        else
+          puts "Success doesn't match"
+          puts " expected:", test['expect']['success']
+          puts "   actual:", result[:success]
         end
+        puts ""
+        puts "Test code:"
+        puts test['code']['asm'] || test['code']['bin']
+        puts ""
+        puts "Hint:", test['hint']
+        puts ""
+        puts "Progress: #{i}/#{total}"
+        puts ""
+        exit 1
+      else
+        puts "✓  Test #{i + 1}/#{total} #{test['name']}"
+      end
     end
+  end
 end
 
 evm_test = EVMTest.new

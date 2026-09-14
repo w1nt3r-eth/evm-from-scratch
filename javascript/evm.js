@@ -41,7 +41,9 @@ function tests() {
       // As the tests get more complex, pass more inputs to evm and check more outputs.
       const result = evm(Buffer.from(t.code.bin, "hex"));
       assert.equal(result.success, t.expect.success, "Success mismatch");
-      assert.deepEqual(result.stack, t.expect.stack.map(BigInt), "Stack mismatch");
+      if (t.expect.stack != null) {
+        assert.deepEqual(result.stack, t.expect.stack.map(BigInt), "Stack mismatch");
+      }
       passed++;
     } catch (error) {
       console.error(error);

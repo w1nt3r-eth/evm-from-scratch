@@ -11,9 +11,13 @@
  * If you prefer TypeScript, there's a sample TypeScript template in the `typescript` directory.
  */
 
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+
 function evm(code) {
   let pc = 0;
-  let stack = [];
+  const stack = [];
 
   while (pc < code.length) {
     const opcode = code[pc];
@@ -26,51 +30,28 @@ function evm(code) {
 }
 
 function tests() {
-  const fs = require("fs");
-  const path = require("path");
   const proFile = path.join(__dirname, "../evm-pro.json");
-  const tests = require(fs.existsSync(proFile) ? proFile : "../evm.json");
-
-  const hexStringToUint8Array = (hexString) =>
-    new Uint8Array(hexString.match(/../g).map((byte) => parseInt(byte, 16)));
-
-  const total = Object.keys(tests).length;
+  const testFile = fs.existsSync(proFile) ? proFile : path.join(__dirname, "../evm.json");
+  const tests = JSON.parse(fs.readFileSync(testFile, "utf8"));
   let passed = 0;
 
-  try {
-    for (const t of tests) {
-      console.log("Test #" + (passed + 1), t.name);
-      try {
-        // Note: as the test cases get more complex, you'll need to modify this
-        // to pass down more arguments to the evm function
-        const result = evm(hexStringToUint8Array(t.code.bin));
-
-        if (result.success !== t.expect.success) {
-          throw new Error(
-            `Expected success=${t.expect.success}, got success=${result.success}`
-          );
-        }
-
-        const expectedStackHex = t.expect.stack;
-        const actualStackHex = result.stack.map((v) => "0x" + v.toString(16));
-
-        if (expectedStackHex.join(",") !== actualStackHex.join(",")) {
-          console.log("expected stack:", expectedStackHex);
-          console.log("  actual stack:", actualStackHex);
-          throw new Error("Stack mismatch");
-        }
-      } catch (e) {
-        console.log(`\n\nCode of the failing test (${t.name}):\n`);
-        console.log(t.code.asm.replaceAll(/^/gm, "  "));
-        console.log(`\n\nHint: ${t.hint}\n`);
-        console.log("\n");
-        throw e;
-      }
+  for (const t of tests) {
+    console.log(`Test #${passed + 1}/${tests.length}: ${t.name}`);
+    try {
+      // As the tests get more complex, pass more inputs to evm and check more outputs.
+      const result = evm(Buffer.from(t.code.bin, "hex"));
+      assert.equal(result.success, t.expect.success, "Success mismatch");
+      assert.deepEqual(result.stack, t.expect.stack.map(BigInt), "Stack mismatch");
       passed++;
+    } catch (error) {
+      console.error(error);
+      console.error(`Instructions:\n${t.code.asm ?? t.code.bin}`);
+      if (t.hint) console.error(`Hint: ${t.hint}`);
+      process.exitCode = 1;
+      break;
     }
-  } finally {
-    console.log(`Progress: ${passed}/${total}`);
   }
+  console.log(`Progress: ${passed}/${tests.length}`);
 }
 
 tests();

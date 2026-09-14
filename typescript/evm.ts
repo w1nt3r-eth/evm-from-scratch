@@ -4,22 +4,22 @@
  *
  * To work on EVM From Scratch in TypeScript:
  *
- * - Install Node.js: https://nodejs.org/en/download/
+ * - Install Node.js 24 or newer: https://nodejs.org/en/download/
  * - Go to the `typescript` directory: `cd typescript`
- * - Install dependencies: `yarn` (or `npm install`)
  * - Edit `evm.ts` (this file!), see TODO below
- * - Run `yarn test` (or `npm test`) to run the tests
- * - Use Jest Watch Mode to run tests when files change: `yarn test --watchAll`
+ * - Run `node evm.test.ts` to run the tests (no install needed)
+ * - Run `node --watch evm.test.ts` to rerun when code changes
+ * - Optional type checking: `npm install` then `npm run typecheck`
  */
 
 type Result = {
-  success: boolean,
-  stack: bigint[]
-}
+  success: boolean;
+  stack: bigint[];
+};
 
 export default function evm(code: Uint8Array): Result {
   let pc = 0;
-  let stack = [];
+  const stack: bigint[] = [];
 
   while (pc < code.length) {
     const opcode = code[pc];

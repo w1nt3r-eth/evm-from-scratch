@@ -1,26 +1,33 @@
-import { expect, test } from "@jest/globals";
-import evm from "./evm";
-import { existsSync, readFileSync } from "fs";
-import path from "path";
+import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
+import evm from "./evm.ts";
 
-const proFile = path.join(__dirname, "../evm-pro.json");
-const testFile = existsSync(proFile) ? proFile : path.join(__dirname, "../evm.json");
-const tests = JSON.parse(readFileSync(testFile, "utf8"));
+type TestCase = {
+  name: string;
+  hint: string;
+  code: { bin: string; asm: string | null };
+  expect: { success: boolean; stack: string[] };
+};
 
-for (const t of tests as any) {
-  test(t.name, () => {
-    // Note: as the test cases get more complex, you'll need to modify this
-    // to pass down more arguments to the evm function (e.g. block, state, etc.)
-    // and return more data (e.g. state, logs, etc.)
-    const result = evm(hexStringToUint8Array(t.code.bin));
+const proFile = new URL("../evm-pro.json", import.meta.url);
+const testFile = existsSync(proFile) ? proFile : new URL("../evm.json", import.meta.url);
+const tests: TestCase[] = JSON.parse(readFileSync(testFile, "utf8"));
+let passed = 0;
 
-    expect(result.success).toEqual(t.expect.success);
-    expect(result.stack).toEqual(t.expect.stack.map((item) => BigInt(item)));
-  });
+for (const t of tests) {
+  console.log(`Test #${passed + 1}/${tests.length}: ${t.name}`);
+  try {
+    // As the tests get more complex, pass more inputs to evm and check more outputs.
+    const result = evm(Buffer.from(t.code.bin, "hex"));
+    assert.equal(result.success, t.expect.success, "Success mismatch");
+    assert.deepEqual(result.stack, t.expect.stack.map(BigInt), "Stack mismatch");
+    passed++;
+  } catch (error) {
+    console.error(error);
+    console.error(`Instructions:\n${t.code.asm ?? t.code.bin}`);
+    if (t.hint) console.error(`Hint: ${t.hint}`);
+    process.exitCode = 1;
+    break;
+  }
 }
-
-function hexStringToUint8Array(hexString: string) {
-  return new Uint8Array(
-    (hexString?.match(/../g) || []).map((byte) => parseInt(byte, 16))
-  );
-}
+console.log(`Progress: ${passed}/${tests.length}`);

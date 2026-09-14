@@ -5,25 +5,19 @@ pub struct EvmResult {
     pub success: bool,
 }
 
-pub fn evm(_code: impl AsRef<[u8]>) -> EvmResult {
+pub fn evm(code: &[u8]) -> EvmResult {
     let stack: Vec<U256> = Vec::new();
     let mut pc = 0;
 
-    let code = _code.as_ref();
-
     while pc < code.len() {
-        let opcode = code[pc];
+        let _opcode = code[pc];
         pc += 1;
 
-        if opcode == 0x00 {
-            // STOP
-        }
+        // TODO: implement the EVM here!
     }
 
-    // TODO: Implement me
-
-    return EvmResult {
-        stack: stack,
+    EvmResult {
+        stack,
         success: true,
-    };
+    }
 }

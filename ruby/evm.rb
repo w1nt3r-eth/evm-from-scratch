@@ -75,13 +75,13 @@ class EVMTest
                 end
                 puts ""
                 puts "Test code:"
-                puts test['code']['asm']
+                puts test['code']['asm'] || test['code']['bin']
                 puts ""
                 puts "Hint:", test['hint']
                 puts ""
                 puts "Progress: #{i}/#{total}"
                 puts ""
-                break
+                exit 1
             else
                 puts "✓  Test #{i + 1}/#{total} #{test['name']}"
             end

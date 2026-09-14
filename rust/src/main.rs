@@ -5,14 +5,13 @@
  * To work on EVM From Scratch in Rust:
  *
  * - Install Rust: https://www.rust-lang.org/tools/install
- * - Edit `rust/lib.rs`
+ * - Edit `rust/src/lib.rs`
  * - Run `cd rust && cargo run` to run the tests
  *
  * Hint: most people who were trying to learn Rust and EVM at the same
  * gave up and switched to JavaScript, Python, or Go. If you are new
  * to Rust, implement EVM in another programming language first.
  */
-
 use evm::evm;
 use primitive_types::U256;
 use serde::Deserialize;
@@ -27,7 +26,7 @@ struct Evmtest {
 
 #[derive(Debug, Deserialize)]
 struct Code {
-    asm: String,
+    asm: Option<String>,
     bin: String,
 }
 
@@ -35,15 +34,14 @@ struct Code {
 struct Expect {
     stack: Option<Vec<String>>,
     success: bool,
-    // #[serde(rename = "return")]
-    // ret: Option<String>,
 }
 
-
 fn main() {
-    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("..");
-    let pro_file = root.join("evm-pro.json");
-    let test_file = if pro_file.exists() { pro_file } else { root.join("evm.json") };
+    let test_file = if std::path::Path::new("../evm-pro.json").exists() {
+        "../evm-pro.json"
+    } else {
+        "../evm.json"
+    };
     let text = std::fs::read_to_string(test_file).unwrap();
     let data: Vec<Evmtest> = serde_json::from_str(&text).unwrap();
 
@@ -63,20 +61,13 @@ fn main() {
             }
         }
 
-        let mut matching = result.stack.len() == expected_stack.len();
-        if matching {
-            for i in 0..result.stack.len() {
-                if result.stack[i] != expected_stack[i] {
-                    matching = false;
-                    break;
-                }
-            }
-        }
-        
-        matching = matching && result.success == test.expect.success;
+        let matching = result.stack == expected_stack && result.success == test.expect.success;
 
         if !matching {
-            println!("Instructions: \n{}\n", test.code.asm);
+            println!(
+                "Instructions: \n{}\n",
+                test.code.asm.as_deref().unwrap_or(&test.code.bin)
+            );
 
             println!("Expected success: {:?}", test.expect.success);
             println!("Expected stack: [");
@@ -84,7 +75,7 @@ fn main() {
                 println!("  {:#X},", v);
             }
             println!("]\n");
-            
+
             println!("Actual success: {:?}", result.success);
             println!("Actual stack: [");
             for v in result.stack {
@@ -94,7 +85,7 @@ fn main() {
 
             println!("\nHint: {}\n", test.hint);
             println!("Progress: {}/{}\n\n", index, total);
-            panic!("Test failed");
+            std::process::exit(1);
         }
         println!("PASS");
     }

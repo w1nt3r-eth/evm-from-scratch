@@ -5,10 +5,8 @@ import (
 	"encoding/json"
 	"math/big"
 	"os"
+	"slices"
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 type testCase struct {
@@ -99,13 +97,17 @@ func TestEVM(t *testing.T) {
 			if gotSuccess != tt.Want.Success {
 				t.Errorf("Evm(…) got success = %t; want %t", gotSuccess, tt.Want.Success)
 			}
-			if diff := cmp.Diff(toHexStrings(tt.Want.StackInts()), toHexStrings(got), cmpopts.EquateEmpty()); diff != "" {
-				t.Errorf("Evm(…) stack mismatch; diff (-want +got)\n%s", diff)
+			if wantStack, gotStack := toHexStrings(tt.Want.StackInts()), toHexStrings(got); !slices.Equal(wantStack, gotStack) {
+				t.Errorf("Evm(…) stack mismatch; want %v, got %v", wantStack, gotStack)
 			}
 
 			if t.Failed() {
 				t.Logf("✕  %v", tt.Name)
-				t.Logf("EVM Instructions:\n%v", tt.Code.Asm)
+				instructions := tt.Code.Asm
+				if instructions == "" {
+					instructions = tt.Code.Bin
+				}
+				t.Logf("EVM Instructions:\n%v", instructions)
 				if tt.Hint != "" {
 					t.Log("#####")
 					t.Logf("##### HINT: %s", tt.Hint)

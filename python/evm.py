@@ -11,28 +11,28 @@
 # - Run `python3 evm.py` to run the tests
 
 import json
-import os
+from pathlib import Path
 
-def evm(code):
+def evm(code: bytes) -> tuple[bool, list[int]]:
     pc = 0
     success = True
-    stack = []
+    stack: list[int] = []
 
     while pc < len(code):
         op = code[pc]
         pc += 1
 
         # TODO: implement the EVM here!
-        
+
 
     return (success, stack)
 
 def test():
-    script_dirname = os.path.dirname(os.path.abspath(__file__))
-    json_file = os.path.join(script_dirname, "..", "evm-pro.json")
-    if not os.path.exists(json_file):
-        json_file = os.path.join(script_dirname, "..", "evm.json")
-    with open(json_file) as f:
+    root = Path(__file__).resolve().parent.parent
+    json_file = root / "evm-pro.json"
+    if not json_file.exists():
+        json_file = root / "evm.json"
+    with json_file.open(encoding="utf-8") as f:
         data = json.load(f)
         total = len(data)
 
@@ -43,7 +43,7 @@ def test():
             (success, stack) = evm(code)
 
             expected_stack = [int(x, 16) for x in test['expect']['stack']]
-            
+
             if stack != expected_stack or success != test['expect']['success']:
                 print(f"❌ Test #{i + 1}/{total} {test['name']}")
                 if stack != expected_stack:
@@ -56,13 +56,13 @@ def test():
                     print("   actual:", success)
                 print("")
                 print("Test code:")
-                print(test['code']['asm'])
+                print(test['code']['asm'] or test['code']['bin'])
                 print("")
                 print("Hint:", test['hint'])
                 print("")
                 print(f"Progress: {i}/{len(data)}")
                 print("")
-                break
+                raise SystemExit(1)
             else:
                 print(f"✓  Test #{i + 1}/{total} {test['name']}")
 

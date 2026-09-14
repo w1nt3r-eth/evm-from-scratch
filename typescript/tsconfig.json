@@ -1,12 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "commonjs",
-    "resolveJsonModule": true,
+    "target": "ES2024",
+    "module": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
     "strict": true,
-    "esModuleInterop": true,
     "noEmit": true,
-    "noImplicitAny": false,
-    "declaration": true
-  }
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "*.ts"
+  ]
 }
